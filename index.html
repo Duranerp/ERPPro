@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERPPro — Sistema Empresarial</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root {
+  --blue: #0057A8; --blue-dark: #003D7A; --blue-light: #E8F1FA; --blue-mid: #1976D2;
+  --gold: #F0AB00; --gray: #F5F5F5; --gray-mid: #EBEBEB; --gray-dark: #6E6E6E;
+  --text: #1A1A2E; --white: #FFFFFF; --success: #107E3E; --danger: #BB0000;
+  --warning: #E9730C; --border: #D3D3D3; --sidebar-w: 230px; --radius: 4px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',Arial,sans-serif;background:#EEF2F7;color:var(--text);font-size:14px;min-height:100vh}
+
+/* ========= LOGIN ========= */
+#login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#003D7A 0%,#0057A8 50%,#1976D2 100%);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:#fff;border-radius:8px;padding:40px 36px;width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo h1{font-size:28px;font-weight:700;color:var(--blue-dark);letter-spacing:2px}
+.login-logo h1 span{color:var(--gold)}
+.login-logo p{font-size:12px;color:var(--gray-dark);margin-top:4px}
+.login-box .form-group{margin-bottom:16px}
+.login-box label{display:block;font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:5px}
+.login-box input,.login-box select{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:inherit;outline:none;transition:border .15s}
+.login-box input:focus,.login-box select:focus{border-color:var(--blue)}
+.login-btn{width:100%;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:background .15s}
+.login-btn:hover{background:var(--blue-dark)}
+.login-error{color:var(--danger);font-size:12px;margin-top:8px;text-align:center;display:none}
+.user-badge{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;margin:2px}
+.ub-ceo{background:#1A1A2E;color:#F0AB00}
+.ub-gerente{background:#003D7A;color:#fff}
+.ub-sub{background:#0057A8;color:#fff}
+.ub-cajero{background:#107E3E;color:#fff}
+.ub-compras{background:#E9730C;color:#fff}
+
+/* ========= TOPBAR ========= */
+.topbar{background:var(--blue-dark);color:#fff;height:44px;display:flex;align-items:center;padding:0 18px;gap:16px;box-shadow:0 2px 6px rgba(0,0,0,0.25);position:sticky;top:0;z-index:100}
+.topbar-logo{font-size:18px;font-weight:700;letter-spacing:2px;color:#fff;display:flex;align-items:center;gap:8px}
+.topbar-logo span.dot{width:10px;height:10px;border-radius:50%;background:var(--gold);display:inline-block}
+.topbar-title{font-size:13px;color:rgba(255,255,255,.75);flex:1}
+.topbar-user{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
+.topbar-alerts{position:relative;cursor:pointer;padding:4px 8px}
+.alert-badge{position:absolute;top:-2px;right:-2px;background:var(--danger);color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--blue-mid);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;border:2px solid rgba(255,255,255,.3)}
+
+/* ========= LAYOUT ========= */
+.layout{display:flex;flex:1;min-height:calc(100vh - 44px)}
+.sidebar{width:var(--sidebar-w);background:var(--blue);color:#fff;display:flex;flex-direction:column;position:sticky;top:44px;height:calc(100vh - 44px);overflow-y:auto}
+.sidebar-section{padding:10px 0 2px}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:1.2px;color:rgba(255,255,255,.5);padding:0 14px 5px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.88);transition:background .15s;border-left:3px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,.1)}
+.nav-item.active{background:rgba(255,255,255,.18);border-left:3px solid var(--gold);color:#fff;font-weight:600}
+.nav-icon{font-size:15px;width:20px;text-align:center}
+.nav-item.hidden-nav{display:none}
+
+/* ========= MAIN ========= */
+.main{flex:1;padding:20px 22px;overflow-y:auto}
+.page{display:none}
+.page.active{display:block}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:2px solid var(--blue);padding-bottom:8px}
+.page-header h2{font-size:19px;font-weight:700;color:var(--blue-dark)}
+.breadcrumb{font-size:12px;color:var(--gray-dark)}
+
+/* ========= CARDS ========= */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-bottom:20px}
+.kpi-card{background:#fff;border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border-top:3px solid var(--blue)}
+.kpi-card .kpi-label{font-size:11px;color:var(--gray-dark);text-transform:uppercase;letter-spacing:.8px}
+.kpi-card .kpi-value{font-size:24px;font-weight:700;color:var(--blue-dark);margin:3px 0}
+.kpi-card .kpi-sub{font-size:11px;color:var(--success)}
+.kpi-card.gold{border-top-color:var(--gold)}
+.kpi-card.green{border-top-color:var(--success)}
+.kpi-card.red{border-top-color:var(--danger)}
+.kpi-card.orange{border-top-color:var(--warning)}
+
+/* ========= PANEL ========= */
+.panel{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+.panel-header{background:var(--blue);color:#fff;padding:9px 14px;font-size:13px;font-weight:700;letter-spacing:.4px;display:flex;align-items:center;justify-content:space-between}
+.panel-body{padding:14px}
+
+/* ========= BUTTONS ========= */
+.btn{padding:6px 14px;border-radius:var(--radius);border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:5px;font-family:inherit}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue-dark)}
+.btn-secondary{background:#fff;color:var(--blue);border:1px solid var(--blue)}.btn-secondary:hover{background:var(--blue-light)}
+.btn-success{background:var(--success);color:#fff}
+.btn-warning{background:var(--warning);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-xs{padding:2px 7px;font-size:11px}
+
+/* ========= FORM ========= */
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--gray-dark);margin-bottom:3px}
+.form-control{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);background:#fff;transition:border .15s;outline:none;font-family:inherit}
+.form-control:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(0,87,168,.12)}
+.form-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+
+/* ========= TABLE ========= */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--blue-light);color:var(--blue-dark);font-weight:700;padding:8px 11px;text-align:left;border-bottom:2px solid var(--blue);font-size:12px}
+tbody tr{border-bottom:1px solid var(--gray-mid);transition:background .1s}
+tbody tr:hover{background:var(--blue-light)}
+tbody td{padding:7px 11px}
+
+/* ========= BADGE ========= */
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700}
+.badge-success{background:#D3F0E0;color:var(--success)}
+.badge-danger{background:#FDECEA;color:var(--danger)}
+.badge-warning{background:#FEF0D6;color:var(--warning)}
+.badge-info{background:var(--blue-light);color:var(--blue)}
+.badge-dark{background:#1A1A2E;color:#F0AB00}
+
+/* ========= TABS ========= */
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:7px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-dark);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab:hover{color:var(--blue)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ========= ALERTS PANEL ========= */
+.alert-item{padding:9px 12px;border-left:4px solid;background:#fff;margin-bottom:7px;border-radius:2px;font-size:13px;display:flex;align-items:flex-start;gap:8px}
+.alert-item.danger{border-color:var(--danger);background:#fff5f5}
+.alert-item.warning{border-color:var(--warning);background:#fff9f0}
+.alert-item.success{border-color:var(--success);background:#f0faf4}
+.alert-item.info{border-color:var(--blue);background:var(--blue-light)}
+
+/* ========= CAJA / POS ========= */
+.pos-grid{display:grid;grid-template-columns:1fr 340px;gap:16px}
+.pos-products{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;max-height:420px;overflow-y:auto}
+.pos-product-btn{background:#fff;border:1px solid var(--border);border-radius:6px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s}
+.pos-product-btn:hover{border-color:var(--blue);background:var(--blue-light);transform:translateY(-1px)}
+.pos-product-btn .pp-name{font-size:12px;font-weight:600;color:var(--text);margin-top:4px}
+.pos-product-btn .pp-price{font-size:13px;font-weight:700;color:var(--blue)}
+.pos-product-btn .pp-stock{font-size:10px;color:var(--gray-dark)}
+.cart-panel{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);display:flex;flex-direction:column;height:fit-content;max-height:600px}
+.cart-header{background:var(--blue-dark);color:#fff;padding:10px 14px;font-weight:700;font-size:13px;border-radius:4px 4px 0 0}
+.cart-items{flex:1;overflow-y:auto;padding:10px;max-height:280px}
+.cart-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--gray-mid);font-size:13px}
+.cart-item-name{flex:1}
+.cart-item-qty{display:flex;align-items:center;gap:4px}
+.cart-item-qty button{width:22px;height:22px;border:1px solid var(--border);background:#fff;border-radius:3px;cursor:pointer;font-size:14px;line-height:1}
+.cart-item-qty span{width:28px;text-align:center;font-weight:600}
+.cart-item-price{font-weight:700;min-width:60px;text-align:right}
+.cart-totals{padding:10px 14px;border-top:2px solid var(--gray-mid);background:#fafafa}
+.cart-total-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}
+.cart-total-row.grand{font-size:15px;font-weight:700;color:var(--blue-dark);border-top:1px solid var(--border);margin-top:4px;padding-top:4px}
+.cart-actions{padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap}
+.payment-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center}
+.payment-modal.open{display:flex}
+.payment-box{background:#fff;border-radius:8px;padding:28px;width:360px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.payment-box h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--blue-dark)}
+.receipt{font-family:'IBM Plex Mono',monospace;font-size:12px;background:#1A1A2E;color:#7DD3FC;padding:14px;border-radius:4px;white-space:pre;max-height:300px;overflow-y:auto}
+
+/* ========= QUERY BUILDER ========= */
+.query-result{font-family:'IBM Plex Mono',monospace;background:#1A1A2E;color:#7DD3FC;padding:14px;border-radius:var(--radius);font-size:12px;white-space:pre-wrap;min-height:60px}
+.condition-row{display:flex;gap:6px;align-items:center;margin-bottom:7px}
+
+/* ========= MISC ========= */
+.dash-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.module-tile{background:#fff;border-radius:var(--radius);padding:14px 10px;text-align:center;box-shadow:var(--shadow);cursor:pointer;transition:all .15s;border-top:3px solid var(--blue)}
+.module-tile:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,87,168,.2)}
+.module-tile .m-icon{font-size:24px;margin-bottom:4px}
+.module-tile .m-name{font-size:12px;font-weight:700;color:var(--blue-dark)}
+.module-tile.gold{border-top-color:var(--gold)}
+.module-tile.green{border-top-color:var(--success)}
+.module-tile.red{border-top-color:var(--danger)}
+.module-tile.teal{border-top-color:#00897B}
+.module-tile.orange{border-top-color:var(--warning)}
+.hidden{display:none!important}
+.flex-gap{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.mt-2{margin-top:8px}
+.mb-2{margin-bottom:8px}
+.text-muted{color:var(--gray-dark);font-size:12px}
+.text-danger{color:var(--danger)}
+.text-warning{color:var(--warning)}
+.text-success{color:var(--success)}
+.upload-zone{border:2px dashed var(--blue);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;background:var(--blue-light);transition:all .2s}
+.upload-zone p{color:var(--blue);font-size:13px}
+.product-thumb{width:75px;height:75px;object-fit:cover;border-radius:var(--radius);border:2px solid var(--border);margin:6px}
+.barcode-container{text-align:center;padding:10px;background:#fff;border:1px solid var(--border);display:inline-block;border-radius:var(--radius)}
+.price-label{background:#fff;border:2px solid #222;padding:10px 18px;text-align:center;font-family:Arial,sans-serif;min-width:150px;display:inline-block}
+.price-label .prod-name{font-size:13px;font-weight:700;margin-bottom:3px;border-bottom:1px solid #222;padding-bottom:3px}
+.price-label .prod-price{font-size:26px;font-weight:900;color:#B00;margin:5px 0}
+.price-label .prod-sku{font-size:10px;color:#444}
+.progress-bar{background:#e0e0e0;border-radius:4px;height:8px;width:100%}
+.progress-fill{height:8px;border-radius:4px;background:var(--blue)}
+.session-pill{background:rgba(255,255,255,.15);border-radius:12px;padding:3px 10px;font-size:11px;font-weight:600}
+
+/* Notificación toast */
+.toast{position:fixed;bottom:24px;right:24px;background:#1A1A2E;color:#fff;padding:12px 20px;border-radius:6px;font-size:13px;z-index:9998;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;max-width:320px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{border-left:4px solid var(--success)}
+.toast.danger{border-left:4px solid var(--danger)}
+.toast.warning{border-left:4px solid var(--warning)}
+
+@media print{.topbar,.sidebar,.btn,.tabs,.no-print{display:none!important}.main{padding:0}.panel{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1>ERP<span>Pro</span></h1>
+      <p>Sistema de Gestión Empresarial</p>
+    </div>
+    <div class="form-group">
+      <label>Usuario</label>
+      <input type="text" id="login-user" placeholder="usuario@empresa.com" value="admin">
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" value="1234" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="form-group">
+      <label>Sucursal / Caja</label>
+      <select id="login-branch" class="form-control">
+        <option value="1">Sucursal Central</option>
+        <option value="2">Sucursal Norte</option>
+        <option value="3">Sucursal Sur</option>
+      </select>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Iniciar Sesión</button>
+    <div class="login-error" id="login-error">Usuario o contraseña incorrectos</div>
+    <div style="margin-top:18px;border-top:1px solid #eee;padding-top:14px">
+      <p style="font-size:11px;color:#999;margin-bottom:8px">Usuarios de prueba:</p>
+      <span class="user-badge ub-ceo">CEO: admin / 1234</span>
+      <span class="user-badge ub-gerente">Gerente: gerente / 1234</span>
+      <span class="user-badge ub-sub">Subgerente: sub / 1234</span>
+      <span class="user-badge ub-cajero">Cajero: cajero / 1234</span>
+      <span class="user-badge ub-compras">Compras: compras / 1234</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app" style="display:none;flex-direction:column;min-height:100vh">
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo"><span class="dot"></span> ERP<span style="color:var(--gold)">Pro</span></div>
+  <div class="topbar-title" id="tb-title">Sistema de Gestión Empresarial</div>
+  <div class="flex-gap">
+    <div class="session-pill" id="tb-branch">Sucursal Central</div>
+    <div class="topbar-alerts" onclick="showPage('alertas',null)" title="Alertas">
+      🔔<div class="alert-badge" id="alert-count">0</div>
+    </div>
+    <div class="topbar-user" onclick="doLogout()">
+      <div class="avatar" id="tb-avatar">AD</div>
+      <span id="tb-username">Administrador</span>
+      <span style="font-size:11px;opacity:.6">▼ Salir</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout" id="main-layout">
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Principal</div>
+    <div class="nav-item active" data-page="dashboard" onclick="navTo('dashboard',this)"><span class="nav-icon">🏠</span>Dashboard</div>
+    <div class="nav-item" data-page="alertas" onclick="navTo('alertas',this)"><span class="nav-icon">🔔</span>Alertas <span id="sidebar-alert-badge" style="margin-left:auto;background:var(--danger);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">0</span></div>
+  </div>
+  <div class="sidebar-section" id="sec-ventas">
+    <div class="sidebar-label">Punto de Venta</div>
+    <div class="nav-item" data-page="caja" onclick="navTo('caja',this)"><span class="nav-icon">🖥️</span>Caja / POS</div>
+    <div class="nav-item" data-page="facturacion" onclick="navTo('facturacion',this)"><span class="nav-icon">🧾</span>Facturación</div>
+  </div>
+  <div class="sidebar-section" id="sec-operaciones">
+    <div class="sidebar-label">Operaciones</div>
+    <div class="nav-item" data-page="sd" onclick="navTo('sd',this)"><span class="nav-icon">🛒</span>Ventas (SD)</div>
+    <div class="nav-item" data-page="mm" onclick="navTo('mm',this)"><span class="nav-icon">📦</span>Inventario (MM)</div>
+    <div class="nav-item" data-page="pp" onclick="navTo('pp',this)"><span class="nav-icon">🏭</span>Producción (PP)</div>
+  </div>
+  <div class="sidebar-section" id="sec-compras-nav">
+    <div class="sidebar-label">Compras</div>
+    <div class="nav-item" data-page="compras" onclick="navTo('compras',this)"><span class="nav-icon">🛍️</span>Órdenes de Compra</div>
+    <div class="nav-item" data-page="proveedores" onclick="navTo('proveedores',this)"><span class="nav-icon">🤝</span>Proveedores</div>
+  </div>
+  <div class="sidebar-section" id="sec-finanzas">
+    <div class="sidebar-label">Finanzas</div>
+    <div class="nav-item" data-page="fi" onclick="navTo('fi',this)"><span class="nav-icon">📊</span>Contabilidad (FI)</div>
+    <div class="nav-item" data-page="co" onclick="navTo('co',this)"><span class="nav-icon">💰</span>Controlling (CO)</div>
+    <div class="nav-item" data-page="hcm" onclick="navTo('hcm',this)"><span class="nav-icon">👥</span>RRHH (HCM)</div>
+  </div>
+  <div class="sidebar-section" id="sec-cierres">
+    <div class="sidebar-label">Cierres</div>
+    <div class="nav-item" data-page="cierre-dia" onclick="navTo('cierre-dia',this)"><span class="nav-icon">📅</span>Cierre del Día</div>
+    <div class="nav-item" data-page="cierre-mes" onclick="navTo('cierre-mes',this)"><span class="nav-icon">📆</span>Cierre de Mes</div>
+  </div>
+  <div class="sidebar-section" id="sec-productos">
+    <div class="sidebar-label">Productos</div>
+    <div class="nav-item" data-page="labels" onclick="navTo('labels',this)"><span class="nav-icon">🏷️</span>Etiquetas</div>
+    <div class="nav-item" data-page="barcodes" onclick="navTo('barcodes',this)"><span class="nav-icon">▐▌</span>Códigos Barra</div>
+    <div class="nav-item" data-page="products" onclick="navTo('products',this)"><span class="nav-icon">🖼️</span>Catálogo</div>
+  </div>
+  <div class="sidebar-section" id="sec-admin">
+    <div class="sidebar-label">Administración</div>
+    <div class="nav-item" data-page="query" onclick="navTo('query',this)"><span class="nav-icon">🔍</span>SQL Query</div>
+    <div class="nav-item" data-page="usuarios" onclick="navTo('usuarios',this)"><span class="nav-icon">👤</span>Usuarios</div>
+    <div class="nav-item" data-page="ps" onclick="navTo('ps',this)"><span class="nav-icon">📋</span>Proyectos (PS)</div>
+    <div class="nav-item" data-page="qm" onclick="navTo('qm',this)"><span class="nav-icon">✅</span>Calidad (QM)</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ===== DASHBOARD ===== -->
+<div id="page-dashboard" class="page active">
+  <div class="page-header"><h2>Dashboard Principal</h2><span class="breadcrumb">Inicio › Dashboard</span></div>
+  <div class="cards-grid">
+    <div class="kpi-card"><div class="kpi-label">Ventas Hoy</div><div class="kpi-value" id="kpi-ventas">$84,200</div><div class="kpi-sub">▲ 12% vs ayer</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Órdenes Abiertas</div><div class="kpi-value">142</div><div class="kpi-sub">▲ 5 nuevas</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Inventario</div><div class="kpi-value">3,481</div><div class="kpi-sub">Artículos activos</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Alerta Stock</div><div class="kpi-value" id="kpi-stock-alert">3</div><div class="kpi-sub">Bajo mínimo</div></div>
+    <div class="kpi-card orange"><div class="kpi-label">Vence 30 días</div><div class="kpi-value" id="kpi-expiry">5</div><div class="kpi-sub">Productos en riesgo</div></div>
+    <div class="kpi-card"><div class="kpi-label">ITBIS del Mes</div><div class="kpi-value">$12,840</div><div class="kpi-sub">Generado acumulado</div></div>
+  </div>
+  <div class="dash-row">
+    <div class="panel">
+      <div class="panel-header">Alertas Críticas</div>
+      <div class="panel-body" id="dash-alerts-panel"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">Últimas Ventas</div>
+      <div class="panel-body" style="padding:0">
+        <table><thead><tr><th>Factura</th><th>Cliente</th><th>Total</th><th>Estado</th></tr></thead>
+        <tbody id="dash-sales-table">
+          <tr><td>FC-0892</td><td>Distribuidora Sur</td><td>$8,400</td><td><span class="badge badge-success">Cobrado</span></td></tr>
+          <tr><td>FC-0893</td><td>Retail Max</td><td>$3,200</td><td><span class="badge badge-warning">Pendiente</span></td></tr>
+          <tr><td>FC-0894</td><td>Market Plus</td><td>$1,800</td><td><span class="badge badge-info">Nuevo</span></td></tr>
+        </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">Accesos Rápidos</div>
+    <div class="panel-body">
+      <div class="module-grid" id="module-grid-dash"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ALERTAS ===== -->
+<div id="page-alertas" class="page">
+  <div class="page-header"><h2>Centro de Alertas</h2><span class="breadcrumb">Inicio › Alertas</span></div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'alerta-stock')">⚠️ Stock Bajo</div>
+    <div class="tab" onclick="switchTab(this,'alerta-vencimiento')">📅 Vencimientos</div>
+    <div class="tab" onclick="switchTab(this,'alerta-pedidos')">🛒 Pedidos Sugeridos</div>
+    <div class="tab" onclick="switchTab(this,'alerta-promo')">🎁 Promociones</div>
+  </div>
+  <div id="alerta-stock" class="tab-content active panel">
+    <div class="panel-header">Productos con Stock Bajo</div>
+    <div class="panel-body">
+      <div class="table-wrap"><table><thead><tr><th>Código</th><th>Producto</th><th>Stock Actual</th><th>Stock Mínimo</th><th>Déficit</th><th>Acción</th></tr></thead>
+      <tbody id="tb-stock-bajo"></tbody></table></div>
+    </div>
+  </div>
+  <div id="alerta-vencimiento" class="tab-content panel">
+    <div class="panel-header">Productos que Vencen en 30 días</div>
+    <div class="panel-body">
+      <div class="table-wrap"><table><thead><tr><th>Código</th><th>Producto</th><th>Lote</th><th>Fecha Vencimiento</th><th>Días Restantes</th><th>Stock</th><th>Estado</th></tr></thead>
+      <tbody id="tb-vencimiento"></tbody></table></div>
+    </div>
+  </div>
+  <div id="alerta-pedidos" class="tab-content panel">
+    <div class="panel-header">Pedidos de Compra Sugeridos (basado en ventas)</div>
+    <div class="panel-body">
+      <p class="text-muted mb-2">Sugerencias automáticas basadas en rotación de inventario y stock mínimo.</p>
+      <div class="table-wrap"><table><thead><tr><th>Producto</th><th>Ventas/Semana</th><th>Stock Actual</th><th>Días Cobertura</th><th>Cant. Sugerida</th><th>Acción</th></tr></thead>
+      <tbody id="tb-pedidos-sugeridos"></tbody></table></div>
+    </div>
+  </div>
+  <div id="alerta-promo" class="tab-content panel">
+    <div class="panel-header">Productos que Pueden Vencerse — Sugerencia de Promociones</div>
+    <div class="panel-body">
+      <p class="text-muted mb-2">Productos con stock que se vencerá antes de agotarse según la tasa de venta actual.</p>
+      <div class="table-wrap"><table><thead><tr><th>Producto</th><th>Stock</th><th>Vto.</th><th>Días al Vto.</th><th>Días para Agotar</th><th>Riesgo</th><th>Promo Sugerida</th></tr></thead>
+      <tbody id="tb-promo"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAJA / POS ===== -->
+<div id="page-caja" class="page">
+  <div class="page-header">
+    <h2>Caja / Punto de Venta</h2>
+    <span class="breadcrumb">Ventas › Caja</span>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
+    <div class="form-control" style="width:240px;display:flex;align-items:center;gap:6px">
+      <span>🔍</span>
+      <input id="pos-search" placeholder="Buscar producto o escanear código..." style="border:none;outline:none;width:100%;font-family:inherit;font-size:13px" oninput="filterPOSProducts()">
+    </div>
+    <select class="form-control" style="width:180px" id="pos-category" onchange="filterPOSProducts()">
+      <option value="">Todas las categorías</option>
+      <option>Alimentos</option><option>Bebidas</option><option>Limpieza</option><option>Electrónica</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" onclick="clearCart()">🗑 Limpiar</button>
+  </div>
+  <div class="pos-grid">
+    <div>
+      <div class="pos-products" id="pos-products"></div>
+    </div>
+    <div class="cart-panel">
+      <div class="cart-header">🛒 Carrito — <span id="cart-count">0</span> items</div>
+      <div class="cart-items" id="cart-items"><p style="color:#999;font-size:12px;padding:10px">Carrito vacío</p></div>
+      <div class="cart-totals">
+        <div class="cart-total-row"><span>Subtotal</span><span id="cart-sub">$0.00</span></div>
+        <div class="cart-total-row"><span>Desc.</span><span id="cart-disc">-$0.00</span></div>
+        <div class="cart-total-row"><span>ITBIS (18%)</span><span id="cart-itbis">$0.00</span></div>
+        <div class="cart-total-row grand"><span>TOTAL</span><span id="cart-total">$0.00</span></div>
+      </div>
+      <div class="cart-actions">
+        <div class="form-group" style="width:100%;margin:0 0 6px">
+          <label class="form-label">Cliente</label>
+          <input class="form-control" id="pos-client" placeholder="Consumidor Final">
+        </div>
+        <div class="form-group" style="width:100%;margin:0 0 6px">
+          <label class="form-label">Descuento %</label>
+          <input type="number" class="form-control" id="pos-discount" value="0" min="0" max="100" oninput="updateCartTotals()">
+        </div>
+        <button class="btn btn-success" style="flex:1" onclick="openPayment()">💳 Cobrar</button>
+        <button class="btn btn-secondary btn-sm" onclick="holdOrder()">⏸ Pausar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FACTURACIÓN ===== -->
+<div id="page-facturacion" class="page">
+  <div class="page-header"><h2>Facturación</h2><span class="breadcrumb">Ventas › Facturación</span></div>
+  <div class="panel">
+    <div class="panel-header">Facturas Emitidas <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none" onclick="navTo('caja',null)">+ Nueva desde Caja</button></div>
+    <div class="panel-body">
+      <div class="flex-gap mb-2">
+        <input class="form-control" style="width:220px" placeholder="Buscar factura...">
+        <select class="form-control" style="width:150px"><option>Todos los estados</option><option>Cobrado</option><option>Pendiente</option><option>Anulado</option></select>
+        <input type="date" class="form-control" style="width:160px">
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Factura</th><th>Cliente</th><th>Fecha</th><th>Subtotal</th><th>ITBIS</th><th>Total</th><th>Pago</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody id="facturas-table"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COMPRAS ===== -->
+<div id="page-compras" class="page">
+  <div class="page-header"><h2>Órdenes de Compra</h2><span class="breadcrumb">Compras › Órdenes</span></div>
+  <div class="panel">
+    <div class="panel-header">Crear / Editar Orden de Compra</div>
+    <div class="panel-body">
+      <div class="form-row mb-2">
+        <div class="form-group"><label class="form-label">Proveedor</label><select class="form-control" id="oc-proveedor"><option>Cable Pro SA</option><option>Tech Supplies</option><option>Office Corp</option><option>Alimentos Del Sur</option></select></div>
+        <div class="form-group"><label class="form-label">Fecha Entrega</label><input type="date" class="form-control" id="oc-fecha"></div>
+        <div class="form-group"><label class="form-label">Condición Pago</label><select class="form-control"><option>Contado</option><option>15 días</option><option>30 días</option><option>60 días</option></select></div>
+        <div class="form-group"><label class="form-label">Estado</label><select class="form-control" id="oc-estado"><option>Borrador</option><option>Enviada</option><option>Aprobada</option><option>Recibida</option></select></div>
+      </div>
+      <table style="margin-bottom:10px"><thead><tr><th>Producto</th><th>Cantidad</th><th>Precio Unit.</th><th>Total</th><th></th></tr></thead>
+      <tbody id="oc-items-table">
+        <tr class="oc-item-row"><td><input class="form-control" placeholder="Código / Descripción" style="width:100%"></td><td><input type="number" class="form-control" value="1" style="width:80px" oninput="calcOCTotal()"></td><td><input type="number" class="form-control" value="0" style="width:100px" oninput="calcOCTotal()"></td><td class="oc-row-total">$0.00</td><td><button class="btn btn-xs btn-danger" onclick="this.closest('tr').remove();calcOCTotal()">✕</button></td></tr>
+      </tbody></table>
+      <div class="flex-gap">
+        <button class="btn btn-secondary btn-sm" onclick="addOCItem()">+ Agregar Línea</button>
+        <span style="margin-left:auto;font-weight:700">Total OC: <span id="oc-total" style="color:var(--blue-dark)">$0.00</span></span>
+      </div>
+      <div class="flex-gap mt-2">
+        <button class="btn btn-primary" onclick="saveOC()">💾 Guardar Orden</button>
+        <button class="btn btn-secondary" onclick="printOC()">🖨️ Imprimir</button>
+        <button class="btn btn-gold" onclick="approveOC()">✅ Aprobar</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">Historial de Órdenes</div>
+    <div class="panel-body" style="padding:0">
+      <div class="table-wrap"><table><thead><tr><th>OC N°</th><th>Proveedor</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody id="oc-history-table"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROVEEDORES ===== -->
+<div id="page-proveedores" class="page">
+  <div class="page-header"><h2>Gestión de Proveedores</h2><span class="breadcrumb">Compras › Proveedores</span></div>
+  <div class="panel"><div class="panel-header">Registro de Proveedores</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Nombre / Razón Social</label><input class="form-control" id="prov-nombre" placeholder="Razón Social"></div>
+      <div class="form-group"><label class="form-label">RNC / NIT</label><input class="form-control" id="prov-rnc" placeholder="000-00000-0"></div>
+      <div class="form-group"><label class="form-label">Contacto</label><input class="form-control" id="prov-contacto" placeholder="Email / Tel."></div>
+      <div class="form-group"><label class="form-label">Categoría</label><select class="form-control" id="prov-cat"><option>Alimentos</option><option>Tecnología</option><option>Servicios</option><option>Logística</option></select></div>
+      <div class="form-group"><label class="form-label">Condición</label><select class="form-control"><option>30 días</option><option>60 días</option><option>Contado</option></select></div>
+    </div>
+    <button class="btn btn-primary" onclick="saveProv()">Registrar Proveedor</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Proveedor</th><th>RNC</th><th>Contacto</th><th>Categoría</th><th>Estado</th></tr></thead>
+    <tbody id="prov-table">
+      <tr><td>Tech Supplies SA</td><td>101-12345-6</td><td>tech@example.com</td><td>Tecnología</td><td><span class="badge badge-success">Activo</span></td></tr>
+      <tr><td>Alimentos Del Sur</td><td>101-98765-1</td><td>alim@example.com</td><td>Alimentos</td><td><span class="badge badge-success">Activo</span></td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+
+<!-- ===== SD ===== -->
+<div id="page-sd" class="page">
+  <div class="page-header"><h2>Ventas y Distribución (SD)</h2><span class="breadcrumb">Operaciones › SD</span></div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'sd-ped')">Pedidos</div>
+    <div class="tab" onclick="switchTab(this,'sd-cli')">Clientes</div>
+    <div class="tab" onclick="switchTab(this,'sd-fact')">Facturación</div>
+  </div>
+  <div id="sd-ped" class="tab-content panel"><div class="panel-header">Pedidos de Venta <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none" onclick="newSaleOrder()">+ Nuevo Pedido</button></div><div class="panel-body">
+    <div class="table-wrap"><table><thead><tr><th>Pedido</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <tbody id="sd-ped-table">
+      <tr><td>PV-4421</td><td>Distribuidora Sur</td><td>2024-01-15</td><td>$8,400</td><td><span class="badge badge-success">Entregado</span></td><td><button class="btn btn-xs btn-secondary" onclick="editOrder('PV-4421')">✏️</button></td></tr>
+      <tr><td>PV-4422</td><td>Retail Max</td><td>2024-01-15</td><td>$3,200</td><td><span class="badge badge-warning">En proceso</span></td><td><button class="btn btn-xs btn-secondary" onclick="editOrder('PV-4422')">✏️</button></td></tr>
+      <tr><td>PV-4423</td><td>Market Plus</td><td>2024-01-16</td><td>$1,800</td><td><span class="badge badge-info">Nuevo</span></td><td><button class="btn btn-xs btn-secondary" onclick="editOrder('PV-4423')">✏️</button></td></tr>
+    </tbody></table></div>
+  </div></div>
+  <div id="sd-cli" class="tab-content panel"><div class="panel-header">Clientes</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Nombre</label><input class="form-control" placeholder="Razón Social"></div>
+      <div class="form-group"><label class="form-label">RNC</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Teléfono</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Límite Crédito</label><input type="number" class="form-control"></div>
+    </div>
+    <button class="btn btn-primary">Registrar Cliente</button>
+  </div></div>
+  <div id="sd-fact" class="tab-content panel"><div class="panel-header">Facturación SD</div><div class="panel-body">
+    <div class="table-wrap"><table><thead><tr><th>Factura</th><th>Cliente</th><th>Fecha</th><th>Subtotal</th><th>ITBIS</th><th>Total</th><th>Estado</th></tr></thead>
+    <tbody><tr><td>FC-0892</td><td>Distribuidora Sur</td><td>2024-01-15</td><td>$7,143</td><td>$1,257</td><td>$8,400</td><td><span class="badge badge-success">Cobrado</span></td></tr></tbody></table>
+  </div></div>
+</div>
+
+<!-- ===== MM ===== -->
+<div id="page-mm" class="page">
+  <div class="page-header"><h2>Gestión de Materiales (MM)</h2><span class="breadcrumb">Operaciones › MM</span></div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'mm-inv')">Inventario</div>
+    <div class="tab" onclick="switchTab(this,'mm-mov')">Movimientos</div>
+    <div class="tab" onclick="switchTab(this,'mm-lotes')">Lotes/Vencimiento</div>
+  </div>
+  <div id="mm-inv" class="tab-content panel"><div class="panel-header">Inventario <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none" onclick="addMaterial()">+ Nuevo</button></div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Código</label><input class="form-control" placeholder="MAT-001" id="mm-cod"></div>
+      <div class="form-group"><label class="form-label">Descripción</label><input class="form-control" placeholder="Nombre" id="mm-desc"></div>
+      <div class="form-group"><label class="form-label">Cantidad</label><input type="number" class="form-control" id="mm-qty"></div>
+      <div class="form-group"><label class="form-label">Stock Mín.</label><input type="number" class="form-control" id="mm-min"></div>
+      <div class="form-group"><label class="form-label">Precio Unit.</label><input type="number" class="form-control" id="mm-price"></div>
+      <div class="form-group"><label class="form-label">Ventas/Semana</label><input type="number" class="form-control" id="mm-sales" placeholder="0"></div>
+    </div>
+    <button class="btn btn-primary" onclick="addMaterial()">Registrar</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Código</th><th>Material</th><th>Stock</th><th>Mínimo</th><th>Precio</th><th>Vtas/Sem</th><th>Estado</th></tr></thead>
+    <tbody id="mm-table"></tbody></table></div>
+  </div></div>
+  <div id="mm-mov" class="tab-content panel"><div class="panel-header">Movimientos de Inventario</div><div class="panel-body">
+    <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Código</th><th>Producto</th><th>Tipo</th><th>Cantidad</th><th>Usuario</th></tr></thead>
+    <tbody id="mm-mov-table">
+      <tr><td>2024-01-15</td><td>MAT-001</td><td>Tornillos M8</td><td><span class="badge badge-success">Entrada</span></td><td>+500</td><td>Admin</td></tr>
+      <tr><td>2024-01-15</td><td>MAT-002</td><td>Cable UTP Cat6</td><td><span class="badge badge-danger">Salida</span></td><td>-20</td><td>Cajero</td></tr>
+    </tbody></table></div>
+  </div></div>
+  <div id="mm-lotes" class="tab-content panel"><div class="panel-header">Control de Lotes y Vencimientos</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Producto</label><input class="form-control" id="lot-prod" placeholder="Código"></div>
+      <div class="form-group"><label class="form-label">Lote N°</label><input class="form-control" id="lot-num" placeholder="LOTE-001"></div>
+      <div class="form-group"><label class="form-label">Cantidad</label><input type="number" class="form-control" id="lot-qty"></div>
+      <div class="form-group"><label class="form-label">Fecha Vencimiento</label><input type="date" class="form-control" id="lot-exp"></div>
+    </div>
+    <button class="btn btn-primary" onclick="addLot()">Registrar Lote</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Lote</th><th>Producto</th><th>Cantidad</th><th>Vencimiento</th><th>Días Rest.</th><th>Estado</th></tr></thead>
+    <tbody id="lots-table"></tbody></table></div>
+  </div></div>
+</div>
+
+<!-- ===== PP ===== -->
+<div id="page-pp" class="page">
+  <div class="page-header"><h2>Producción (PP)</h2><span class="breadcrumb">Operaciones › PP</span></div>
+  <div class="panel"><div class="panel-header">Órdenes de Producción</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Producto</label><input class="form-control" placeholder="Código"></div>
+      <div class="form-group"><label class="form-label">Cantidad</label><input type="number" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Inicio</label><input type="date" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Fin</label><input type="date" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Línea</label><select class="form-control"><option>Línea A</option><option>Línea B</option><option>Línea C</option></select></div>
+    </div>
+    <button class="btn btn-primary">Crear Orden</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Orden</th><th>Producto</th><th>Cantidad</th><th>Inicio</th><th>Fin</th><th>Línea</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>OP-0241</td><td>Producto A</td><td>500</td><td>2024-01-15</td><td>2024-01-20</td><td>Línea A</td><td><span class="badge badge-warning">En proceso</span></td></tr>
+      <tr><td>OP-0240</td><td>Producto B</td><td>200</td><td>2024-01-10</td><td>2024-01-14</td><td>Línea B</td><td><span class="badge badge-success">Completado</span></td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+
+<!-- ===== FI ===== -->
+<div id="page-fi" class="page">
+  <div class="page-header"><h2>Contabilidad Financiera (FI)</h2><span class="breadcrumb">Finanzas › FI</span></div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'fi-cg')">Contabilidad General</div>
+    <div class="tab" onclick="switchTab(this,'fi-cp')">Cuentas por Pagar</div>
+    <div class="tab" onclick="switchTab(this,'fi-cr')">Cuentas por Cobrar</div>
+    <div class="tab" onclick="switchTab(this,'fi-af')">Activos Fijos</div>
+  </div>
+  <div id="fi-cg" class="tab-content panel"><div class="panel-header">Asientos Contables <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none" onclick="addAsiento()">+ Nuevo</button></div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Fecha</label><input type="date" class="form-control" id="fi-fecha"></div>
+      <div class="form-group"><label class="form-label">Centro de Costo</label><input class="form-control" placeholder="CC-001" id="fi-cc"></div>
+      <div class="form-group"><label class="form-label">Cuenta</label><input class="form-control" placeholder="4000 - Ingresos" id="fi-cuenta"></div>
+      <div class="form-group"><label class="form-label">Monto</label><input type="number" class="form-control" id="fi-monto"></div>
+      <div class="form-group"><label class="form-label">Tipo</label><select class="form-control" id="fi-tipo"><option>Débito</option><option>Crédito</option></select></div>
+    </div>
+    <button class="btn btn-primary" onclick="addAsiento()">Registrar</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Fecha</th><th>Cuenta</th><th>CC</th><th>Débito</th><th>Crédito</th><th>Estado</th></tr></thead>
+    <tbody id="fi-table">
+      <tr><td>2024-01-15</td><td>4000 - Ventas</td><td>CC-001</td><td>$0</td><td>$12,400</td><td><span class="badge badge-success">Publicado</span></td></tr>
+    </tbody></table></div>
+  </div></div>
+  <div id="fi-cp" class="tab-content panel"><div class="panel-header">Cuentas por Pagar</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Proveedor</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Factura N°</label><input class="form-control" placeholder="FAC-0001"></div>
+      <div class="form-group"><label class="form-label">Vencimiento</label><input type="date" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Monto</label><input type="number" class="form-control"></div>
+    </div>
+    <button class="btn btn-primary">Registrar</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Proveedor</th><th>Factura</th><th>Vencimiento</th><th>Monto</th><th>Estado</th></tr></thead>
+    <tbody><tr><td>Tech Supplies SA</td><td>FAC-1042</td><td>2024-02-01</td><td>$3,200</td><td><span class="badge badge-danger">Vencido</span></td></tr></tbody></table>
+  </div></div>
+  <div id="fi-cr" class="tab-content panel"><div class="panel-header">Cuentas por Cobrar</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Cliente</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Factura N°</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Emisión</label><input type="date" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Monto</label><input type="number" class="form-control"></div>
+    </div>
+    <button class="btn btn-primary">Registrar</button>
+  </div></div>
+  <div id="fi-af" class="tab-content panel"><div class="panel-header">Activos Fijos</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Activo</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Categoría</label><select class="form-control"><option>Maquinaria</option><option>Vehículos</option><option>Equipos</option><option>Inmuebles</option></select></div>
+      <div class="form-group"><label class="form-label">Valor</label><input type="number" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Vida Útil (años)</label><input type="number" class="form-control" value="5"></div>
+    </div>
+    <button class="btn btn-primary">Registrar</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Activo</th><th>Categoría</th><th>Valor</th><th>Deprec.</th><th>Neto</th></tr></thead>
+    <tbody><tr><td>Camión Repartidor</td><td>Vehículos</td><td>$45,000</td><td>$18,000</td><td>$27,000</td></tr></tbody></table>
+  </div></div>
+</div>
+
+<!-- ===== CO ===== -->
+<div id="page-co" class="page">
+  <div class="page-header"><h2>Controlling (CO)</h2><span class="breadcrumb">Finanzas › CO</span></div>
+  <div class="cards-grid">
+    <div class="kpi-card"><div class="kpi-label">Presupuesto Total</div><div class="kpi-value">$500K</div></div>
+    <div class="kpi-card gold"><div class="kpi-label">Ejecutado</div><div class="kpi-value">$312K</div><div class="kpi-sub">62.4%</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Desviación</div><div class="kpi-value">+$18K</div></div>
+  </div>
+  <div class="panel"><div class="panel-header">Centros de Costo</div><div class="panel-body">
+    <div class="table-wrap"><table><thead><tr><th>Centro</th><th>Descripción</th><th>Presupuesto</th><th>Ejecutado</th><th>%</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>CC-001</td><td>Ventas</td><td>$120,000</td><td>$78,000</td><td><div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--success)"></div></div> 65%</td><td><span class="badge badge-success">OK</span></td></tr>
+      <tr><td>CC-002</td><td>Operaciones</td><td>$80,000</td><td>$85,000</td><td><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--danger)"></div></div> 106%</td><td><span class="badge badge-danger">Excedido</span></td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+
+<!-- ===== HCM ===== -->
+<div id="page-hcm" class="page">
+  <div class="page-header"><h2>Recursos Humanos (HCM)</h2><span class="breadcrumb">Finanzas › HCM</span></div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'hcm-emp')">Empleados</div>
+    <div class="tab" onclick="switchTab(this,'hcm-nom')">Nómina</div>
+  </div>
+  <div id="hcm-emp" class="tab-content panel"><div class="panel-header">Personal</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Nombre</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Cédula</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Cargo</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Dpto.</label><select class="form-control"><option>Ventas</option><option>Operaciones</option><option>RRHH</option><option>TI</option><option>Finanzas</option></select></div>
+      <div class="form-group"><label class="form-label">Salario</label><input type="number" class="form-control"></div>
+    </div>
+    <button class="btn btn-primary">Registrar</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Empleado</th><th>Cargo</th><th>Dpto.</th><th>Salario</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>María García</td><td>Gerente Ventas</td><td>Ventas</td><td>$4,800</td><td><span class="badge badge-success">Activo</span></td></tr>
+      <tr><td>Carlos López</td><td>Analista TI</td><td>TI</td><td>$3,200</td><td><span class="badge badge-success">Activo</span></td></tr>
+    </tbody></table></div>
+  </div></div>
+  <div id="hcm-nom" class="tab-content panel"><div class="panel-header">Nómina</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Período</label><select class="form-control"><option>Enero 2024</option><option>Febrero 2024</option></select></div>
+      <div class="form-group"><label class="form-label">Tipo</label><select class="form-control"><option>Quincenal</option><option>Mensual</option></select></div>
+    </div>
+    <div class="flex-gap mb-2"><button class="btn btn-primary">Calcular</button><button class="btn btn-success">Aprobar</button></div>
+    <div class="table-wrap"><table><thead><tr><th>Empleado</th><th>Salario</th><th>Bonos</th><th>Deducciones</th><th>Neto</th></tr></thead>
+    <tbody><tr><td>María García</td><td>$4,800</td><td>$500</td><td>$520</td><td>$4,780</td></tr></tbody></table></div>
+  </div></div>
+</div>
+
+<!-- ===== CIERRE DEL DÍA ===== -->
+<div id="page-cierre-dia" class="page">
+  <div class="page-header"><h2>Cierre del Día</h2><span class="breadcrumb">Cierres › Día</span></div>
+  <div id="cierre-dia-content"></div>
+</div>
+
+<!-- ===== CIERRE DEL MES ===== -->
+<div id="page-cierre-mes" class="page">
+  <div class="page-header"><h2>Cierre de Mes</h2><span class="breadcrumb">Cierres › Mes</span></div>
+  <div id="cierre-mes-content"></div>
+</div>
+
+<!-- ===== QUERY BUILDER (CEO) ===== -->
+<div id="page-query" class="page">
+  <div class="page-header"><h2>Constructor de Consultas SQL</h2><span class="breadcrumb">Administración › Query</span></div>
+  <div class="dash-row">
+    <div class="panel"><div class="panel-header">Configurar Consulta</div><div class="panel-body">
+      <div class="form-group"><label class="form-label">Tabla / Módulo</label>
+        <select class="form-control" id="q-table" onchange="updateQuery()">
+          <option value="BKPF">BKPF - Cabecera Documentos Contables</option>
+          <option value="BSEG">BSEG - Posiciones Documentos</option>
+          <option value="MARA">MARA - Materiales</option>
+          <option value="VBAK">VBAK - Pedidos de Venta</option>
+          <option value="VBAP">VBAP - Posiciones Pedidos</option>
+          <option value="KNA1">KNA1 - Clientes</option>
+          <option value="LFA1">LFA1 - Proveedores</option>
+          <option value="EKKO">EKKO - Órdenes Compra</option>
+          <option value="MSEG">MSEG - Movimientos</option>
+          <option value="FACTURAS">FACTURAS - Facturas Emitidas</option>
+          <option value="CAJA">CAJA - Transacciones de Caja</option>
+          <option value="INVENTARIO">INVENTARIO - Stock Actual</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Campos SELECT</label>
+        <div id="fields-container">
+          <div class="condition-row"><input class="form-control" placeholder="Campo (ej: BUKRS)" oninput="updateQuery()" style="flex:1"><button class="btn btn-xs btn-secondary" onclick="removeFieldRow(this)">✕</button></div>
+          <div class="condition-row"><input class="form-control" placeholder="Campo (ej: BELNR)" oninput="updateQuery()" style="flex:1"><button class="btn btn-xs btn-secondary" onclick="removeFieldRow(this)">✕</button></div>
+        </div>
+        <button class="btn btn-sm btn-secondary mt-2" onclick="addFieldRow()">+ Campo</button>
+      </div>
+      <div class="form-group"><label class="form-label">Condiciones WHERE</label>
+        <div id="conditions-container">
+          <div class="condition-row">
+            <input class="form-control" placeholder="Campo" oninput="updateQuery()" style="width:110px">
+            <select class="form-control" onchange="updateQuery()" style="width:74px"><option>=</option><option>!=</option><option>&gt;</option><option>&lt;</option><option>LIKE</option><option>IN</option></select>
+            <input class="form-control" placeholder="Valor" oninput="updateQuery()" style="flex:1">
+            <select class="form-control" onchange="updateQuery()" style="width:66px"><option>AND</option><option>OR</option></select>
+            <button class="btn btn-xs btn-danger" onclick="removeCondition(this)">✕</button>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-secondary mt-2" onclick="addCondition()">+ Condición</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">ORDER BY</label><input class="form-control" id="q-order" oninput="updateQuery()" placeholder="Campo ASC/DESC"></div>
+        <div class="form-group"><label class="form-label">LIMIT</label><input type="number" class="form-control" id="q-limit" oninput="updateQuery()" value="100"></div>
+      </div>
+      <div class="flex-gap mt-2">
+        <button class="btn btn-primary" onclick="executeQuery()">▶ Ejecutar</button>
+        <button class="btn btn-secondary" onclick="copyQuery()">📋 Copiar</button>
+        <button class="btn btn-warning" onclick="clearQuery()">🗑 Limpiar</button>
+        <button class="btn btn-gold" onclick="exportQueryCSV()">📥 Exportar CSV</button>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panel-header">SQL Generado</div><div class="panel-body">
+      <div class="query-result" id="query-output">SELECT *\nFROM BKPF\nUP TO 100 ROWS.</div>
+      <div style="margin-top:10px">
+        <label class="form-label">Historial</label>
+        <div id="query-history" style="max-height:110px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;padding:5px;font-size:12px;font-family:'IBM Plex Mono',monospace;background:#f9f9f9"></div>
+      </div>
+    </div></div>
+  </div>
+  <div class="panel" id="query-results-panel" style="display:none">
+    <div class="panel-header">Resultados <span id="query-result-count"></span> <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none" onclick="exportQueryCSV()">📥 CSV</button></div>
+    <div class="panel-body"><div class="table-wrap" id="query-results-table"></div></div>
+  </div>
+</div>
+
+<!-- ===== USUARIOS ===== -->
+<div id="page-usuarios" class="page">
+  <div class="page-header"><h2>Gestión de Usuarios</h2><span class="breadcrumb">Admin › Usuarios</span></div>
+  <div class="panel"><div class="panel-header">Usuarios del Sistema</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Usuario</label><input class="form-control" id="nu-user" placeholder="usuario@empresa.com"></div>
+      <div class="form-group"><label class="form-label">Nombre</label><input class="form-control" id="nu-name" placeholder="Nombre Completo"></div>
+      <div class="form-group"><label class="form-label">Contraseña</label><input type="password" class="form-control" id="nu-pass" placeholder="••••••••"></div>
+      <div class="form-group"><label class="form-label">Rol</label>
+        <select class="form-control" id="nu-role">
+          <option value="ceo">CEO (Acceso Total)</option>
+          <option value="gerente">Gerente</option>
+          <option value="subgerente">Subgerente</option>
+          <option value="cajero">Cajero</option>
+          <option value="compras">Encargado Compras</option>
+          <option value="encargado">Encargado Operaciones</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Sucursal</label>
+        <select class="form-control" id="nu-branch">
+          <option value="1">Sucursal Central</option>
+          <option value="2">Sucursal Norte</option>
+          <option value="3">Sucursal Sur</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="saveUser()">Crear Usuario</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Usuario</th><th>Nombre</th><th>Rol</th><th>Sucursal</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <tbody id="users-table"></tbody></table></div>
+  </div></div>
+</div>
+
+<!-- ===== ETIQUETAS ===== -->
+<div id="page-labels" class="page">
+  <div class="page-header"><h2>Etiquetas de Precios</h2><span class="breadcrumb">Productos › Etiquetas</span></div>
+  <div class="dash-row">
+    <div class="panel"><div class="panel-header">Configurar Etiqueta</div><div class="panel-body">
+      <div class="form-group"><label class="form-label">Producto</label><input class="form-control" id="lbl-name" oninput="updateLabel()" placeholder="Nombre del producto"></div>
+      <div class="form-group"><label class="form-label">Precio</label><input class="form-control" id="lbl-price" oninput="updateLabel()" type="number" step="0.01" placeholder="0.00"></div>
+      <div class="form-group"><label class="form-label">SKU</label><input class="form-control" id="lbl-sku" oninput="updateLabel()" placeholder="SKU-001"></div>
+      <div class="form-group"><label class="form-label">Color Precio</label>
+        <select class="form-control" id="lbl-color" onchange="updateLabel()">
+          <option value="#B00">Rojo</option><option value="#0057A8">Azul</option><option value="#107E3E">Verde</option><option value="#000">Negro</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Imagen (opcional)</label><input type="file" class="form-control" accept="image/*" onchange="loadLabelImage(event)"></div>
+      <div class="flex-gap mt-2"><button class="btn btn-primary" onclick="printLabel()">🖨️ Imprimir</button><button class="btn btn-secondary" onclick="addLabelToQueue()">+ Cola</button></div>
+      <div class="mt-2"><label class="form-label">Cola (<span id="queue-count">0</span>)</label>
+        <div id="label-queue" style="display:flex;flex-wrap:wrap;gap:5px;min-height:28px;border:1px dashed var(--border);padding:7px;border-radius:4px"></div>
+        <button class="btn btn-gold mt-2" onclick="printAllLabels()">🖨️ Imprimir Todo</button>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panel-header">Vista Previa</div><div class="panel-body" style="display:flex;align-items:center;justify-content:center;min-height:260px">
+      <div class="price-label" id="label-preview">
+        <p class="prod-name">Nombre del Producto</p>
+        <p class="prod-price" id="prev-price">$0.00</p>
+        <p class="prod-sku">SKU: —</p>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ===== CÓDIGOS BARRA ===== -->
+<div id="page-barcodes" class="page">
+  <div class="page-header"><h2>Códigos de Barra</h2><span class="breadcrumb">Productos › Códigos</span></div>
+  <div class="dash-row">
+    <div class="panel"><div class="panel-header">Generar Código</div><div class="panel-body">
+      <div class="form-group"><label class="form-label">Valor</label><input class="form-control" id="bc-value" placeholder="123456789012" oninput="generateBarcode()"></div>
+      <div class="form-group"><label class="form-label">Descripción</label><input class="form-control" id="bc-desc" placeholder="Nombre" oninput="generateBarcode()"></div>
+      <div class="form-group"><label class="form-label">Formato</label>
+        <select class="form-control" id="bc-format" onchange="generateBarcode()">
+          <option value="CODE128">CODE128</option><option value="EAN13">EAN-13</option><option value="EAN8">EAN-8</option><option value="UPC">UPC</option><option value="CODE39">CODE39</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Alto (px)</label>
+        <input type="range" class="form-control" id="bc-height" min="40" max="150" value="80" oninput="document.getElementById('bc-h-val').textContent=this.value;generateBarcode()">
+        <span class="text-muted" id="bc-h-val">80</span>px
+      </div>
+      <div class="form-group"><label class="form-label">Cantidad</label><input type="number" class="form-control" id="bc-qty" value="1" min="1" max="100"></div>
+      <div class="flex-gap mt-2"><button class="btn btn-primary" onclick="printBarcode()">🖨️ Imprimir</button><button class="btn btn-secondary" onclick="addBarcodeToQueue()">+ Cola</button></div>
+      <div class="mt-2"><label class="form-label">Cola (<span id="bc-queue-count">0</span>)</label>
+        <div id="bc-queue" style="min-height:28px;border:1px dashed var(--border);padding:7px;border-radius:4px"></div>
+        <button class="btn btn-gold mt-2" onclick="printAllBarcodes()">🖨️ Imprimir Todo</button>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panel-header">Vista Previa</div><div class="panel-body" style="display:flex;align-items:center;justify-content:center;min-height:260px">
+      <div class="barcode-container"><svg id="barcode-svg"></svg><p id="bc-desc-preview" style="font-size:11px;color:#555;margin-top:4px">Producto</p></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ===== CATÁLOGO ===== -->
+<div id="page-products" class="page">
+  <div class="page-header"><h2>Catálogo de Productos</h2><span class="breadcrumb">Productos › Catálogo</span></div>
+  <div class="panel"><div class="panel-header">Agregar Producto</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Código</label><input class="form-control" id="img-code" placeholder="MAT-001"></div>
+      <div class="form-group"><label class="form-label">Nombre</label><input class="form-control" id="img-name" placeholder="Descripción"></div>
+      <div class="form-group"><label class="form-label">Categoría</label><select class="form-control" id="img-cat"><option>Electrónica</option><option>Alimentos</option><option>Ropa</option><option>Maquinaria</option><option>Otro</option></select></div>
+      <div class="form-group"><label class="form-label">Precio</label><input type="number" class="form-control" id="img-price"></div>
+    </div>
+    <div class="upload-zone" onclick="document.getElementById('img-upload').click()">
+      <p>📷 Haz clic para subir imagen</p><p class="text-muted">PNG, JPG — Máx. 5MB</p>
+      <input type="file" id="img-upload" accept="image/*" multiple style="display:none" onchange="uploadImages(event)">
+    </div>
+    <div id="img-preview-row" style="display:flex;flex-wrap:wrap;margin-top:8px"></div>
+    <button class="btn btn-primary mt-2" onclick="saveProduct()">💾 Guardar</button>
+  </div></div>
+  <div class="panel"><div class="panel-header">Catálogo</div><div class="panel-body">
+    <div id="product-catalog" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px"></div>
+  </div></div>
+</div>
+
+<!-- ===== PS ===== -->
+<div id="page-ps" class="page">
+  <div class="page-header"><h2>Proyectos (PS)</h2><span class="breadcrumb">Admin › PS</span></div>
+  <div class="panel"><div class="panel-header">Gestión de Proyectos</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Proyecto</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Responsable</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Inicio</label><input type="date" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Fin</label><input type="date" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Presupuesto</label><input type="number" class="form-control"></div>
+    </div>
+    <button class="btn btn-primary">Crear Proyecto</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Proyecto</th><th>Responsable</th><th>Fin</th><th>Presupuesto</th><th>Avance</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>Migración ERP</td><td>Carlos López</td><td>2024-06-30</td><td>$120,000</td><td><div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div> 65%</td><td><span class="badge badge-warning">En curso</span></td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+
+<!-- ===== QM ===== -->
+<div id="page-qm" class="page">
+  <div class="page-header"><h2>Calidad (QM)</h2><span class="breadcrumb">Admin › QM</span></div>
+  <div class="panel"><div class="panel-header">Inspecciones</div><div class="panel-body">
+    <div class="form-row mb-2">
+      <div class="form-group"><label class="form-label">Lote</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Tipo</label><select class="form-control"><option>Entrada</option><option>En proceso</option><option>Final</option></select></div>
+      <div class="form-group"><label class="form-label">Inspector</label><input class="form-control"></div>
+      <div class="form-group"><label class="form-label">Resultado</label><select class="form-control"><option>Aprobado</option><option>Rechazado</option><option>En revisión</option></select></div>
+    </div>
+    <button class="btn btn-primary">Registrar</button>
+    <div class="table-wrap mt-2"><table><thead><tr><th>Lote</th><th>Material</th><th>Tipo</th><th>Inspector</th><th>Resultado</th></tr></thead>
+    <tbody><tr><td>LOTE-441</td><td>Tornillos M8</td><td>Entrada</td><td>Juan Pérez</td><td><span class="badge badge-success">Aprobado</span></td></tr></tbody></table>
+  </div></div>
+</div>
+
+</main>
+</div>
+</div><!-- /app -->
+
+<!-- PAYMENT MODAL -->
+<div class="payment-modal" id="payment-modal">
+  <div class="payment-box">
+    <h3>💳 Procesar Pago</h3>
+    <div class="form-group"><label class="form-label">Total a Cobrar</label><div style="font-size:28px;font-weight:700;color:var(--blue-dark)" id="pay-total">$0.00</div></div>
+    <div class="form-group"><label class="form-label">Método de Pago</label>
+      <select class="form-control" id="pay-method" onchange="updateChange()">
+        <option>Efectivo</option><option>Tarjeta Débito</option><option>Tarjeta Crédito</option><option>Transferencia</option>
+      </select>
+    </div>
+    <div class="form-group" id="pay-cash-group"><label class="form-label">Monto Recibido</label>
+      <input type="number" class="form-control" id="pay-received" oninput="updateChange()" placeholder="0.00">
+    </div>
+    <div class="form-group"><label class="form-label">Cambio</label><div style="font-size:18px;font-weight:700;color:var(--success)" id="pay-change">$0.00</div></div>
+    <div class="flex-gap">
+      <button class="btn btn-success" style="flex:1" onclick="processPayment()">✅ Confirmar Pago</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('payment-modal').classList.remove('open')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA =====
+const USERS = [
+  {user:'admin',pass:'1234',name:'Administrador CEO',role:'ceo',initials:'AD',branch:'1'},
+  {user:'gerente',pass:'1234',name:'Carlos Gerente',role:'gerente',initials:'CG',branch:'1'},
+  {user:'sub',pass:'1234',name:'Ana Subgerente',role:'subgerente',initials:'AS',branch:'2'},
+  {user:'cajero',pass:'1234',name:'Luis Cajero',role:'cajero',initials:'LC',branch:'1'},
+  {user:'compras',pass:'1234',name:'María Compras',role:'compras',initials:'MC',branch:'3'},
+];
+const BRANCHES = {1:'Sucursal Central',2:'Sucursal Norte',3:'Sucursal Sur'};
+
+// Inventory data with expiry
+let INVENTORY = [
+  {cod:'PROD-001',name:'Leche Entera 1L',qty:45,min:100,price:85,salesPerWeek:80,category:'Alimentos',expiry:'2025-06-05',lot:'LOT-A01'},
+  {cod:'PROD-002',name:'Pan de Molde',qty:30,min:50,price:55,salesPerWeek:60,category:'Alimentos',expiry:'2025-05-20',lot:'LOT-A02'},
+  {cod:'PROD-003',name:'Aceite Vegetal 1L',qty:120,min:40,price:145,salesPerWeek:25,category:'Alimentos',expiry:'2026-03-15',lot:'LOT-A03'},
+  {cod:'PROD-004',name:'Arroz 1Kg',qty:200,min:80,price:65,salesPerWeek:90,category:'Alimentos',expiry:'2026-12-01',lot:'LOT-A04'},
+  {cod:'PROD-005',name:'Jabón Líquido',qty:25,min:30,price:120,salesPerWeek:20,category:'Limpieza',expiry:'2027-01-10',lot:'LOT-B01'},
+  {cod:'PROD-006',name:'Queso Blanco 500g',qty:18,min:40,price:220,salesPerWeek:35,category:'Alimentos',expiry:'2025-05-28',lot:'LOT-A05'},
+  {cod:'PROD-007',name:'Cerveza 355ml',qty:300,min:100,price:95,salesPerWeek:150,category:'Bebidas',expiry:'2025-08-15',lot:'LOT-B02'},
+  {cod:'PROD-008',name:'Jugo Naranja 1L',qty:60,min:50,price:110,salesPerWeek:45,category:'Bebidas',expiry:'2025-06-12',lot:'LOT-B03'},
+  {cod:'PROD-009',name:'Cable HDMI 2m',qty:15,min:20,price:450,salesPerWeek:5,category:'Electrónica',expiry:null,lot:null},
+  {cod:'PROD-010',name:'Foco LED 10W',qty:80,min:30,price:180,salesPerWeek:12,category:'Electrónica',expiry:null,lot:null},
+];
+
+let cart = [];
+let facturas = [
+  {id:'FC-0892',client:'Distribuidora Sur',date:'2024-01-15',subtotal:7143,itbis:1257,total:8400,payment:'Efectivo',status:'Cobrado'},
+  {id:'FC-0893',client:'Retail Max',date:'2024-01-15',subtotal:2712,itbis:488,total:3200,payment:'Tarjeta Débito',status:'Pendiente'},
+  {id:'FC-0894',client:'Market Plus',date:'2024-01-16',subtotal:1525,itbis:275,total:1800,payment:'Transferencia',status:'Cobrado'},
+];
+let ocHistory = [
+  {id:'OC-0089',prov:'Cable Pro SA',date:'2024-01-14',total:240,status:'Aprobada'},
+  {id:'OC-0090',prov:'Alimentos Del Sur',date:'2024-01-16',total:1850,status:'Borrador'},
+];
+let systemUsers = [...USERS];
+let labelQueue = [];
+let bcQueue = [];
+let currentUser = null;
+let ocCounter = 91;
+let factCounter = 895;
+
+// ===== LOGIN =====
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value.trim();
+  const b=document.getElementById('login-branch').value;
+  const found=USERS.find(x=>x.user===u&&x.pass===p);
+  if(!found){document.getElementById('login-error').style.display='block';return;}
+  currentUser={...found,branch:b};
+  document.getElementById('login-error').style.display='none';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('tb-username').textContent=found.name;
+  document.getElementById('tb-avatar').textContent=found.initials;
+  document.getElementById('tb-branch').textContent=BRANCHES[b]||'Sucursal';
+  setupPermissions();
+  initData();
+  buildDashboardModules();
+  renderFacturas();
+  renderUsersTable();
+  renderMMTable();
+  renderAlerts();
+  renderCierreDia();
+  renderCierreMes();
+  renderOCHistory();
+  updateQuery();
+  setTimeout(generateBarcode,200);
+  document.getElementById('fi-fecha').value=new Date().toISOString().slice(0,10);
+}
+function doLogout(){
+  currentUser=null;
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('app').style.display='none';
+  cart=[];
+  updateCartUI();
+}
+
+// ===== PERMISSIONS =====
+const ROLE_ACCESS={
+  ceo:['dashboard','alertas','caja','facturacion','sd','mm','pp','compras','proveedores','fi','co','hcm','cierre-dia','cierre-mes','query','usuarios','labels','barcodes','products','ps','qm'],
+  gerente:['dashboard','alertas','caja','facturacion','sd','mm','pp','compras','proveedores','fi','co','hcm','cierre-dia','cierre-mes','labels','barcodes','products'],
+  subgerente:['dashboard','alertas','caja','facturacion','sd','mm','compras','proveedores','cierre-dia','labels','barcodes','products'],
+  cajero:['dashboard','alertas','caja','facturacion','labels','barcodes'],
+  compras:['dashboard','alertas','compras','proveedores','mm'],
+  encargado:['dashboard','alertas','sd','mm','pp','labels','barcodes','products'],
+};
+function setupPermissions(){
+  const role=currentUser.role;
+  const allowed=ROLE_ACCESS[role]||[];
+  // hide sidebar sections based on role
+  const sec={
+    'sec-ventas':['caja','facturacion'],
+    'sec-operaciones':['sd','mm','pp'],
+    'sec-compras-nav':['compras','proveedores'],
+    'sec-finanzas':['fi','co','hcm'],
+    'sec-cierres':['cierre-dia','cierre-mes'],
+    'sec-productos':['labels','barcodes','products'],
+    'sec-admin':['query','usuarios','ps','qm'],
+  };
+  Object.entries(sec).forEach(([secId,pages])=>{
+    const el=document.getElementById(secId);
+    if(el){
+      const hasAny=pages.some(p=>allowed.includes(p));
+      el.style.display=hasAny?'':'none';
+      // hide individual items
+      el.querySelectorAll('.nav-item').forEach(ni=>{
+        const page=ni.dataset.page;
+        if(page&&!allowed.includes(page))ni.style.display='none';
+        else if(page)ni.style.display='';
+      });
+    }
+  });
+}
+function canAccess(page){
+  if(!currentUser)return false;
+  return (ROLE_ACCESS[currentUser.role]||[]).includes(page);
+}
+
+// ===== NAV =====
+function navTo(pageId,el){
+  if(!canAccess(pageId)){showToast('No tienes acceso a este módulo','danger');return;}
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pg=document.getElementById('page-'+pageId);
+  if(pg)pg.classList.add('active');
+  if(el)el.classList.add('active');
+  else{
+    const ni=document.querySelector(`.nav-item[data-page="${pageId}"]`);
+    if(ni)ni.classList.add('active');
+  }
+}
+function showPage(pageId,el){navTo(pageId,el);}
+function switchTab(el,targetId){
+  const parent=el.closest('.panel')||el.parentElement.parentElement;
+  parent.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  parent.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const t=document.getElementById(targetId);
+  if(t)t.classList.add('active');
+}
+
+// ===== TOAST =====
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type+' show';
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ===== ALERTS =====
+const TODAY=new Date();
+function getDaysUntil(dateStr){
+  if(!dateStr)return Infinity;
+  const d=new Date(dateStr);
+  return Math.round((d-TODAY)/(1000*60*60*24));
+}
+function renderAlerts(){
+  // Stock bajo
+  const lowStock=INVENTORY.filter(i=>i.qty<i.min);
+  document.getElementById('kpi-stock-alert').textContent=lowStock.length;
+  const tb1=document.getElementById('tb-stock-bajo');
+  tb1.innerHTML=lowStock.length?lowStock.map(i=>`<tr><td>${i.cod}</td><td>${i.name}</td><td class="text-danger"><b>${i.qty}</b></td><td>${i.min}</td><td class="text-danger">-${i.min-i.qty}</td><td><button class="btn btn-xs btn-primary" onclick="navTo('compras',null)">Generar OC</button></td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--success)">✅ Sin alertas de stock</td></tr>';
+
+  // Vencimientos 30 días
+  const expiring=INVENTORY.filter(i=>i.expiry&&getDaysUntil(i.expiry)<=30);
+  document.getElementById('kpi-expiry').textContent=expiring.length;
+  const tb2=document.getElementById('tb-vencimiento');
+  tb2.innerHTML=expiring.length?expiring.map(i=>{
+    const days=getDaysUntil(i.expiry);
+    const badge=days<=7?'badge-danger':days<=15?'badge-warning':'badge-info';
+    return `<tr><td>${i.cod}</td><td>${i.name}</td><td>${i.lot||'—'}</td><td>${i.expiry}</td><td><span class="badge ${badge}">${days} días</span></td><td>${i.qty}</td><td><span class="badge ${badge}">${days<=7?'URGENTE':days<=15?'Crítico':'Próximo'}</span></td></tr>`;
+  }).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--success)">✅ Sin vencimientos próximos</td></tr>';
+
+  // Pedidos sugeridos
+  const suggested=INVENTORY.filter(i=>i.qty<i.min||(i.salesPerWeek>0&&i.qty/(i.salesPerWeek/7)<14));
+  const tb3=document.getElementById('tb-pedidos-sugeridos');
+  tb3.innerHTML=suggested.map(i=>{
+    const coverage=i.salesPerWeek>0?Math.round(i.qty/(i.salesPerWeek/7)):999;
+    const sugQty=Math.max(i.min*2-i.qty,Math.round(i.salesPerWeek*4));
+    return `<tr><td>${i.name}</td><td>${i.salesPerWeek}/sem</td><td>${i.qty}</td><td>${coverage} días</td><td><b>${sugQty}</b></td><td><button class="btn btn-xs btn-gold" onclick="quickOC('${i.name}',${sugQty})">Crear OC</button></td></tr>`;
+  }).join('');
+
+  // Promociones (vencimiento antes de agotar)
+  const promo=INVENTORY.filter(i=>{
+    if(!i.expiry)return false;
+    const days=getDaysUntil(i.expiry);
+    if(days>90)return false;
+    const daysToEmpty=i.salesPerWeek>0?Math.round(i.qty/(i.salesPerWeek/7)):999;
+    return daysToEmpty>days;
+  });
+  const tb4=document.getElementById('tb-promo');
+  tb4.innerHTML=promo.length?promo.map(i=>{
+    const daysToExp=getDaysUntil(i.expiry);
+    const daysToEmpty=i.salesPerWeek>0?Math.round(i.qty/(i.salesPerWeek/7)):999;
+    const risk=daysToExp<7?'badge-danger':daysToExp<15?'badge-warning':'badge-info';
+    const discPct=daysToExp<7?30:daysToExp<15?20:10;
+    return `<tr><td>${i.name}</td><td>${i.qty}</td><td>${i.expiry}</td><td><span class="badge ${risk}">${daysToExp}d</span></td><td>${daysToEmpty}d</td><td><span class="badge ${risk}">${daysToExp<7?'ALTO':daysToExp<15?'MEDIO':'BAJO'}</span></td><td>🏷️ ${discPct}% descuento</td></tr>`;
+  }).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--success)">✅ Sin riesgo de vencimiento</td></tr>';
+
+  // Dashboard alerts
+  const alertCount=lowStock.length+expiring.length;
+  document.getElementById('alert-count').textContent=alertCount;
+  document.getElementById('sidebar-alert-badge').textContent=alertCount;
+  const dashAlerts=document.getElementById('dash-alerts-panel');
+  let ahtml='';
+  if(lowStock.length)ahtml+=`<div class="alert-item danger">⚠️ <span><b>${lowStock.length} productos</b> con stock bajo el mínimo</span></div>`;
+  if(expiring.length)ahtml+=`<div class="alert-item warning">📅 <span><b>${expiring.length} productos</b> vencen en los próximos 30 días</span></div>`;
+  if(promo.length)ahtml+=`<div class="alert-item warning">🎁 <span><b>${promo.length} productos</b> en riesgo de vencerse — sugerir promociones</span></div>`;
+  if(suggested.length)ahtml+=`<div class="alert-item info">🛒 <span><b>${suggested.length} productos</b> requieren reabastecimiento</span></div>`;
+  ahtml+=`<div class="alert-item success">✅ <span>Sistema operando normalmente</span></div>`;
+  dashAlerts.innerHTML=ahtml;
+}
+
+function quickOC(name,qty){
+  navTo('compras',null);
+  showToast(`OC sugerida para: ${name} x${qty}`,'success');
+}
+
+// ===== INVENTORY =====
+function initData(){
+  renderMMTable();
+}
+function renderMMTable(){
+  const tb=document.getElementById('mm-table');
+  if(!tb)return;
+  tb.innerHTML=INVENTORY.map(i=>{
+    const st=i.qty<i.min?'<span class="badge badge-danger">Bajo Stock</span>':'<span class="badge badge-success">Disponible</span>';
+    return `<tr><td>${i.cod}</td><td>${i.name}</td><td><b>${i.qty}</b></td><td>${i.min}</td><td>$${i.price}</td><td>${i.salesPerWeek}/sem</td><td>${st}</td></tr>`;
+  }).join('');
+  renderLotsTable();
+}
+function addMaterial(){
+  const cod=document.getElementById('mm-cod').value||'MAT-NEW';
+  const desc=document.getElementById('mm-desc').value||'Nuevo';
+  const qty=parseInt(document.getElementById('mm-qty').value)||0;
+  const min=parseInt(document.getElementById('mm-min').value)||0;
+  const price=parseFloat(document.getElementById('mm-price').value)||0;
+  const sales=parseInt(document.getElementById('mm-sales').value)||0;
+  INVENTORY.push({cod,name:desc,qty,min,price,salesPerWeek:sales,category:'Otro',expiry:null,lot:null});
+  renderMMTable();renderAlerts();showToast('Material registrado');
+}
+
+// ===== LOTS =====
+function addLot(){
+  const prod=document.getElementById('lot-prod').value;
+  const num=document.getElementById('lot-num').value;
+  const qty=parseInt(document.getElementById('lot-qty').value)||0;
+  const exp=document.getElementById('lot-exp').value;
+  const item=INVENTORY.find(i=>i.cod===prod||i.name===prod);
+  if(item){item.expiry=exp;item.lot=num;}
+  renderLotsTable();renderAlerts();showToast('Lote registrado');
+}
+function renderLotsTable(){
+  const tb=document.getElementById('lots-table');
+  if(!tb)return;
+  const lots=INVENTORY.filter(i=>i.lot);
+  tb.innerHTML=lots.map(i=>{
+    const days=getDaysUntil(i.expiry);
+    const badge=days<=7?'badge-danger':days<=30?'badge-warning':'badge-success';
+    return `<tr><td>${i.lot}</td><td>${i.name}</td><td>${i.qty}</td><td>${i.expiry}</td><td><span class="badge ${badge}">${isFinite(days)?days+' días':'—'}</span></td><td><span class="badge ${badge}">${days<=7?'URGENTE':days<=30?'Próximo':'OK'}</span></td></tr>`;
+  }).join('');
+}
+
+// ===== POS =====
+function buildPOSProducts(){
+  const grid=document.getElementById('pos-products');
+  if(!grid)return;
+  const search=(document.getElementById('pos-search')||{}).value||'';
+  const cat=(document.getElementById('pos-category')||{}).value||'';
+  const filtered=INVENTORY.filter(i=>{
+    const matchS=!search||i.name.toLowerCase().includes(search.toLowerCase())||i.cod.toLowerCase().includes(search.toLowerCase());
+    const matchC=!cat||i.category===cat;
+    return matchS&&matchC&&i.qty>0;
+  });
+  grid.innerHTML=filtered.map(i=>`
+    <div class="pos-product-btn" onclick="addToCart('${i.cod}')">
+      <div style="font-size:22px">${i.category==='Alimentos'?'🥫':i.category==='Bebidas'?'🧃':i.category==='Limpieza'?'🧹':i.category==='Electrónica'?'🔌':'📦'}</div>
+      <div class="pp-name">${i.name}</div>
+      <div class="pp-price">$${i.price.toFixed(2)}</div>
+      <div class="pp-stock">Stock: ${i.qty}</div>
+    </div>
+  `).join('');
+}
+function filterPOSProducts(){buildPOSProducts();}
+
+function addToCart(cod){
+  const item=INVENTORY.find(i=>i.cod===cod);
+  if(!item)return;
+  const existing=cart.find(c=>c.cod===cod);
+  if(existing){
+    if(existing.qty>=item.qty){showToast('Sin más stock','danger');return;}
+    existing.qty++;
+  } else {
+    cart.push({cod,name:item.name,price:item.price,qty:1,maxQty:item.qty});
+  }
+  updateCartUI();
+}
+function updateCartUI(){
+  const ci=document.getElementById('cart-items');
+  const cc=document.getElementById('cart-count');
+  if(!ci)return;
+  if(!cart.length){ci.innerHTML='<p style="color:#999;font-size:12px;padding:10px">Carrito vacío</p>';cc.textContent=0;updateCartTotals();return;}
+  cc.textContent=cart.reduce((s,c)=>s+c.qty,0);
+  ci.innerHTML=cart.map((c,i)=>`
+    <div class="cart-item">
+      <div class="cart-item-name">${c.name}</div>
+      <div class="cart-item-qty">
+        <button onclick="changeQty(${i},-1)">−</button>
+        <span>${c.qty}</span>
+        <button onclick="changeQty(${i},1)">+</button>
+      </div>
+      <div class="cart-item-price">$${(c.price*c.qty).toFixed(2)}</div>
+      <button class="btn btn-xs btn-danger" onclick="removeFromCart(${i})">✕</button>
+    </div>
+  `).join('');
+  updateCartTotals();
+}
+function changeQty(idx,delta){
+  cart[idx].qty=Math.max(1,Math.min(cart[idx].qty+delta,cart[idx].maxQty));
+  updateCartUI();
+}
+function removeFromCart(idx){cart.splice(idx,1);updateCartUI();}
+function clearCart(){cart=[];updateCartUI();document.getElementById('pos-discount').value=0;}
+function updateCartTotals(){
+  const disc=parseFloat(document.getElementById('pos-discount')?.value||0)/100;
+  const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const discAmt=sub*disc;
+  const taxable=sub-discAmt;
+  const itbis=taxable*0.18;
+  const total=taxable+itbis;
+  document.getElementById('cart-sub').textContent='$'+sub.toFixed(2);
+  document.getElementById('cart-disc').textContent='-$'+discAmt.toFixed(2);
+  document.getElementById('cart-itbis').textContent='$'+itbis.toFixed(2);
+  document.getElementById('cart-total').textContent='$'+total.toFixed(2);
+}
+function holdOrder(){showToast('Orden pausada — puede continuar más tarde','warning');}
+
+// ===== PAYMENT =====
+function openPayment(){
+  if(!cart.length){showToast('El carrito está vacío','danger');return;}
+  const total=document.getElementById('cart-total').textContent;
+  document.getElementById('pay-total').textContent=total;
+  document.getElementById('pay-received').value='';
+  document.getElementById('pay-change').textContent='$0.00';
+  document.getElementById('payment-modal').classList.add('open');
+}
+function updateChange(){
+  const total=parseFloat(document.getElementById('pay-total').textContent.replace('$',''))||0;
+  const recv=parseFloat(document.getElementById('pay-received').value)||0;
+  const change=recv-total;
+  const el=document.getElementById('pay-change');
+  el.textContent='$'+Math.max(0,change).toFixed(2);
+  el.style.color=change<0?'var(--danger)':'var(--success)';
+  document.getElementById('pay-cash-group').style.display=document.getElementById('pay-method').value==='Efectivo'?'':'none';
+}
+function processPayment(){
+  const disc=parseFloat(document.getElementById('pos-discount')?.value||0)/100;
+  const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const taxable=sub*(1-disc);
+  const itbis=taxable*0.18;
+  const total=taxable+itbis;
+  const client=document.getElementById('pos-client')?.value||'Consumidor Final';
+  const method=document.getElementById('pay-method').value;
+  const id='FC-0'+factCounter++;
+  const today=new Date().toISOString().slice(0,10);
+  facturas.unshift({id,client,date:today,subtotal:parseFloat(taxable.toFixed(2)),itbis:parseFloat(itbis.toFixed(2)),total:parseFloat(total.toFixed(2)),payment:method,status:'Cobrado'});
+  // Reduce inventory
+  cart.forEach(c=>{const item=INVENTORY.find(i=>i.cod===c.cod);if(item)item.qty=Math.max(0,item.qty-c.qty);});
+  document.getElementById('payment-modal').classList.remove('open');
+  showToast(`Pago procesado — ${id}`,'success');
+  clearCart();
+  renderFacturas();
+  renderAlerts();
+  renderMMTable();
+  // Update cierre
+  renderCierreDia();
+}
+
+// ===== FACTURAS =====
+function renderFacturas(){
+  const tb=document.getElementById('facturas-table');
+  if(!tb)return;
+  tb.innerHTML=facturas.map(f=>`
+    <tr>
+      <td><b>${f.id}</b></td>
+      <td>${f.client}</td>
+      <td>${f.date}</td>
+      <td>$${f.subtotal.toFixed(2)}</td>
+      <td>$${f.itbis.toFixed(2)}</td>
+      <td><b>$${f.total.toFixed(2)}</b></td>
+      <td>${f.payment}</td>
+      <td><span class="badge ${f.status==='Cobrado'?'badge-success':f.status==='Pendiente'?'badge-warning':'badge-danger'}">${f.status}</span></td>
+      <td><button class="btn btn-xs btn-secondary" onclick="printFact('${f.id}')">🖨️</button> <button class="btn btn-xs btn-danger" onclick="voidFact('${f.id}')">🚫</button></td>
+    </tr>
+  `).join('');
+}
+function printFact(id){
+  const f=facturas.find(x=>x.id===id);
+  if(!f)return;
+  const w=window.open('','_blank','width=400,height=500');
+  w.document.write(`<html><head><title>Factura ${id}</title><style>body{font-family:'Courier New',monospace;font-size:13px;padding:20px;max-width:320px}h2{text-align:center}hr{border-top:1px dashed #000}.total{font-size:16px;font-weight:bold}</style></head><body>
+  <h2>ERPPro</h2><hr>
+  <p>Factura: <b>${f.id}</b></p>
+  <p>Fecha: ${f.date}</p>
+  <p>Cliente: ${f.client}</p>
+  <p>Método: ${f.payment}</p><hr>
+  <p>Subtotal: $${f.subtotal.toFixed(2)}</p>
+  <p>ITBIS (18%): $${f.itbis.toFixed(2)}</p>
+  <p class="total">TOTAL: $${f.total.toFixed(2)}</p><hr>
+  <p style="text-align:center;font-size:11px">¡Gracias por su compra!</p>
+  <script>window.print();window.close();<\/script></body></html>`);
+}
+function voidFact(id){
+  const f=facturas.find(x=>x.id===id);
+  if(f)f.status='Anulado';
+  renderFacturas();showToast('Factura anulada','warning');
+}
+
+// ===== CIERRE DÍA =====
+function renderCierreDia(){
+  const today=new Date().toISOString().slice(0,10);
+  const todayFacts=facturas.filter(f=>f.date===today&&f.status==='Cobrado');
+  const totalVentas=todayFacts.reduce((s,f)=>s+f.total,0);
+  const totalITBIS=todayFacts.reduce((s,f)=>s+f.itbis,0);
+  const totalSub=todayFacts.reduce((s,f)=>s+f.subtotal,0);
+  const costEstimado=totalSub*0.62;
+  const utilidad=totalSub-costEstimado;
+  const el=document.getElementById('cierre-dia-content');
+  if(!el)return;
+  el.innerHTML=`
+    <div class="cards-grid">
+      <div class="kpi-card green"><div class="kpi-label">Total Ventas Hoy</div><div class="kpi-value">$${totalVentas.toFixed(2)}</div><div class="kpi-sub">${todayFacts.length} transacciones</div></div>
+      <div class="kpi-card"><div class="kpi-label">Subtotal (sin ITBIS)</div><div class="kpi-value">$${totalSub.toFixed(2)}</div></div>
+      <div class="kpi-card gold"><div class="kpi-label">ITBIS Generado</div><div class="kpi-value">$${totalITBIS.toFixed(2)}</div><div class="kpi-sub">18% sobre ventas</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Utilidad Estimada</div><div class="kpi-value">$${utilidad.toFixed(2)}</div><div class="kpi-sub">Margen ~38%</div></div>
+      <div class="kpi-card red"><div class="kpi-label">Costo Estimado</div><div class="kpi-value">$${costEstimado.toFixed(2)}</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">Resumen Cierre del Día — ${today} <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none" onclick="printCierreDia()">🖨️ Imprimir</button></div>
+      <div class="panel-body">
+        <div class="table-wrap"><table><thead><tr><th>Factura</th><th>Cliente</th><th>Subtotal</th><th>ITBIS</th><th>Total</th><th>Método</th></tr></thead>
+        <tbody>${todayFacts.length?todayFacts.map(f=>`<tr><td>${f.id}</td><td>${f.client}</td><td>$${f.subtotal.toFixed(2)}</td><td>$${f.itbis.toFixed(2)}</td><td><b>$${f.total.toFixed(2)}</b></td><td>${f.payment}</td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:#999">Sin transacciones hoy</td></tr>'}</tbody>
+        </table></div>
+        <div style="margin-top:14px;padding:12px;background:var(--blue-light);border-radius:4px;border-left:4px solid var(--blue)">
+          <p style="font-weight:700;font-size:14px;color:var(--blue-dark)">📊 Resumen Ejecutivo del Día:</p>
+          <p>• Ventas brutas: <b>$${totalVentas.toFixed(2)}</b></p>
+          <p>• ITBIS a declarar: <b>$${totalITBIS.toFixed(2)}</b></p>
+          <p>• Utilidad operacional estimada: <b style="color:var(--success)">$${utilidad.toFixed(2)}</b></p>
+          <p>• Margen de utilidad: <b>~38%</b></p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function printCierreDia(){window.print();}
+
+// ===== CIERRE MES =====
+function renderCierreMes(){
+  const totalVentas=facturas.filter(f=>f.status==='Cobrado').reduce((s,f)=>s+f.total,0);
+  const totalITBIS=facturas.filter(f=>f.status==='Cobrado').reduce((s,f)=>s+f.itbis,0);
+  const totalSub=facturas.filter(f=>f.status==='Cobrado').reduce((s,f)=>s+f.subtotal,0);
+  const costo=totalSub*0.62;
+  const utilidad=totalSub-costo;
+  const el=document.getElementById('cierre-mes-content');
+  if(!el)return;
+  el.innerHTML=`
+    <div class="cards-grid">
+      <div class="kpi-card green"><div class="kpi-label">Ventas del Mes</div><div class="kpi-value">$${totalVentas.toFixed(2)}</div><div class="kpi-sub">${facturas.filter(f=>f.status==='Cobrado').length} facturas</div></div>
+      <div class="kpi-card gold"><div class="kpi-label">ITBIS Acumulado</div><div class="kpi-value">$${totalITBIS.toFixed(2)}</div><div class="kpi-sub">Para declarar a DGII</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Utilidad Neta Est.</div><div class="kpi-value">$${utilidad.toFixed(2)}</div></div>
+      <div class="kpi-card red"><div class="kpi-label">Costo Total Est.</div><div class="kpi-value">$${costo.toFixed(2)}</div></div>
+      <div class="kpi-card"><div class="kpi-label">Margen</div><div class="kpi-value">${totalSub>0?Math.round((utilidad/totalSub)*100):0}%</div></div>
+      <div class="kpi-card orange"><div class="kpi-label">Facturas Anuladas</div><div class="kpi-value">${facturas.filter(f=>f.status==='Anulado').length}</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">Estado de Resultados del Mes <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:none" onclick="window.print()">🖨️ Imprimir</button></div>
+      <div class="panel-body">
+        <div style="max-width:500px;margin:0 auto">
+          <table>
+            <tbody>
+              <tr><td style="padding:8px 12px;font-weight:600">INGRESOS</td><td></td></tr>
+              <tr><td style="padding:6px 12px 6px 24px">Ventas brutas</td><td style="text-align:right;padding:6px 12px">$${totalVentas.toFixed(2)}</td></tr>
+              <tr><td style="padding:6px 12px 6px 24px">(-) ITBIS incluido</td><td style="text-align:right;padding:6px 12px;color:var(--danger)">-$${totalITBIS.toFixed(2)}</td></tr>
+              <tr style="border-top:2px solid var(--blue)"><td style="padding:8px 12px;font-weight:700">Ingresos netos</td><td style="text-align:right;padding:8px 12px;font-weight:700">$${totalSub.toFixed(2)}</td></tr>
+              <tr><td style="padding:8px 12px;font-weight:600;color:var(--danger)">COSTOS</td><td></td></tr>
+              <tr><td style="padding:6px 12px 6px 24px">Costo de ventas (est.)</td><td style="text-align:right;padding:6px 12px;color:var(--danger)">-$${costo.toFixed(2)}</td></tr>
+              <tr style="border-top:2px solid var(--success)"><td style="padding:10px 12px;font-weight:700;font-size:15px;color:var(--success)">UTILIDAD OPERACIONAL</td><td style="text-align:right;padding:10px 12px;font-weight:700;font-size:15px;color:var(--success)">$${utilidad.toFixed(2)}</td></tr>
+              <tr style="background:var(--blue-light)"><td style="padding:8px 12px;font-weight:700;color:var(--blue-dark)">ITBIS A DECLARAR (DGII)</td><td style="text-align:right;padding:8px 12px;font-weight:700;color:var(--blue-dark)">$${totalITBIS.toFixed(2)}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ===== OC =====
+function addOCItem(){
+  const tb=document.getElementById('oc-items-table');
+  const tr=document.createElement('tr');tr.className='oc-item-row';
+  tr.innerHTML=`<td><input class="form-control" placeholder="Código / Descripción" style="width:100%"></td><td><input type="number" class="form-control" value="1" style="width:80px" oninput="calcOCTotal()"></td><td><input type="number" class="form-control" value="0" style="width:100px" oninput="calcOCTotal()"></td><td class="oc-row-total">$0.00</td><td><button class="btn btn-xs btn-danger" onclick="this.closest('tr').remove();calcOCTotal()">✕</button></td>`;
+  tb.appendChild(tr);
+}
+function calcOCTotal(){
+  let total=0;
+  document.querySelectorAll('.oc-item-row').forEach(row=>{
+    const inputs=row.querySelectorAll('input[type=number]');
+    const qty=parseFloat(inputs[0]?.value)||0;
+    const price=parseFloat(inputs[1]?.value)||0;
+    const sub=qty*price;total+=sub;
+    const cell=row.querySelector('.oc-row-total');
+    if(cell)cell.textContent='$'+sub.toFixed(2);
+  });
+  document.getElementById('oc-total').textContent='$'+total.toFixed(2);
+}
+function saveOC(){
+  const prov=document.getElementById('oc-proveedor').value;
+  const date=new Date().toISOString().slice(0,10);
+  const total=document.getElementById('oc-total').textContent;
+  const status=document.getElementById('oc-estado').value;
+  const id='OC-0'+ocCounter++;
+  ocHistory.unshift({id,prov,date,total:total.replace('$',''),status});
+  renderOCHistory();showToast(`${id} guardada`,'success');
+}
+function approveOC(){document.getElementById('oc-estado').value='Aprobada';saveOC();showToast('Orden aprobada','success');}
+function printOC(){window.print();}
+function renderOCHistory(){
+  const tb=document.getElementById('oc-history-table');
+  if(!tb)return;
+  tb.innerHTML=ocHistory.map(o=>`
+    <tr>
+      <td><b>${o.id}</b></td><td>${o.prov}</td><td>${o.date}</td><td>$${o.total}</td>
+      <td><span class="badge ${o.status==='Aprobada'?'badge-success':o.status==='Recibida'?'badge-dark':o.status==='Enviada'?'badge-info':'badge-warning'}">${o.status}</span></td>
+      <td>
+        <button class="btn btn-xs btn-secondary" onclick="editOC('${o.id}')">✏️</button>
+        <button class="btn btn-xs btn-primary" onclick="window.print()">🖨️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+function editOC(id){showToast(`Editando ${id}`,'warning');}
+
+// ===== PROVEEDORES =====
+function saveProv(){
+  const tb=document.getElementById('prov-table');
+  const name=document.getElementById('prov-nombre').value;
+  const rnc=document.getElementById('prov-rnc').value;
+  const contact=document.getElementById('prov-contacto').value;
+  const cat=document.getElementById('prov-cat').value;
+  if(!name){showToast('Ingresa el nombre','danger');return;}
+  const row=document.createElement('tr');
+  row.innerHTML=`<td>${name}</td><td>${rnc}</td><td>${contact}</td><td>${cat}</td><td><span class="badge badge-success">Activo</span></td>`;
+  tb.insertBefore(row,tb.firstChild);showToast('Proveedor registrado');
+}
+
+// ===== SD =====
+function newSaleOrder(){showToast('Redirigiendo a Caja para nueva venta','warning');navTo('caja',null);}
+function editOrder(id){showToast(`Editando pedido ${id}`,'warning');}
+
+// ===== FI =====
+function addAsiento(){
+  const fecha=document.getElementById('fi-fecha').value||new Date().toISOString().slice(0,10);
+  const cc=document.getElementById('fi-cc').value||'CC-001';
+  const cuenta=document.getElementById('fi-cuenta').value||'4000';
+  const monto=document.getElementById('fi-monto').value||'0';
+  const tipo=document.getElementById('fi-tipo').value;
+  const tb=document.getElementById('fi-table');
+  const row=document.createElement('tr');
+  row.innerHTML=`<td>${fecha}</td><td>${cuenta}</td><td>${cc}</td><td>${tipo==='Débito'?'$'+parseFloat(monto).toFixed(2):'$0'}</td><td>${tipo==='Crédito'?'$'+parseFloat(monto).toFixed(2):'$0'}</td><td><span class="badge badge-warning">Borrador</span></td>`;
+  tb.insertBefore(row,tb.firstChild);showToast('Asiento registrado');
+}
+
+// ===== USERS =====
+function saveUser(){
+  const user=document.getElementById('nu-user').value;
+  const name=document.getElementById('nu-name').value;
+  const pass=document.getElementById('nu-pass').value;
+  const role=document.getElementById('nu-role').value;
+  const branch=document.getElementById('nu-branch').value;
+  if(!user||!name||!pass){showToast('Completa todos los campos','danger');return;}
+  const initials=name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  systemUsers.push({user,name,pass,role,initials,branch});
+  USERS.push({user,name,pass,role,initials,branch});
+  renderUsersTable();showToast('Usuario creado');
+}
+const ROLE_LABELS={ceo:'CEO 👑',gerente:'Gerente',subgerente:'Subgerente',cajero:'Cajero',compras:'Compras',encargado:'Encargado'};
+function renderUsersTable(){
+  const tb=document.getElementById('users-table');
+  if(!tb)return;
+  tb.innerHTML=systemUsers.map(u=>`
+    <tr>
+      <td>${u.user}</td><td>${u.name}</td>
+      <td><span class="badge ${u.role==='ceo'?'badge-dark':u.role==='gerente'?'badge-info':u.role==='cajero'?'badge-success':'badge-warning'}">${ROLE_LABELS[u.role]||u.role}</span></td>
+      <td>${BRANCHES[u.branch]||'—'}</td>
+      <td><span class="badge badge-success">Activo</span></td>
+      <td><button class="btn btn-xs btn-danger" onclick="deleteUser('${u.user}')">Eliminar</button></td>
+    </tr>
+  `).join('');
+}
+function deleteUser(user){
+  if(user===currentUser.user){showToast('No puedes eliminar tu propio usuario','danger');return;}
+  const i=systemUsers.findIndex(u=>u.user===user);
+  if(i>=0)systemUsers.splice(i,1);
+  renderUsersTable();showToast('Usuario eliminado','warning');
+}
+
+// ===== DASHBOARD MODULES =====
+function buildDashboardModules(){
+  const allowed=ROLE_ACCESS[currentUser.role]||[];
+  const modules=[
+    {id:'caja',icon:'🖥️',name:'Caja POS',color:'green'},
+    {id:'facturacion',icon:'🧾',name:'Facturación',color:''},
+    {id:'compras',icon:'🛍️',name:'Compras',color:'orange'},
+    {id:'mm',icon:'📦',name:'Inventario',color:'green'},
+    {id:'sd',icon:'🛒',name:'Ventas SD',color:''},
+    {id:'fi',icon:'📊',name:'Contabilidad',color:''},
+    {id:'co',icon:'💰',name:'Controlling',color:'gold'},
+    {id:'hcm',icon:'👥',name:'RRHH',color:'gold'},
+    {id:'cierre-dia',icon:'📅',name:'Cierre Día',color:'teal'},
+    {id:'cierre-mes',icon:'📆',name:'Cierre Mes',color:'teal'},
+    {id:'query',icon:'🔍',name:'SQL Query',color:'gold'},
+    {id:'usuarios',icon:'👤',name:'Usuarios',color:'red'},
+    {id:'alertas',icon:'🔔',name:'Alertas',color:'orange'},
+    {id:'labels',icon:'🏷️',name:'Etiquetas',color:'red'},
+    {id:'barcodes',icon:'▐▌',name:'Códigos',color:''},
+    {id:'products',icon:'🖼️',name:'Catálogo',color:'teal'},
+  ].filter(m=>allowed.includes(m.id));
+  const grid=document.getElementById('module-grid-dash');
+  if(grid)grid.innerHTML=modules.map(m=>`<div class="module-tile ${m.color}" onclick="navTo('${m.id}',null)"><div class="m-icon">${m.icon}</div><div class="m-name">${m.name}</div></div>`).join('');
+}
+
+// ===== LABEL =====
+let labelImageData=null;
+function updateLabel(){
+  const name=document.getElementById('lbl-name').value||'Nombre del Producto';
+  const price=parseFloat(document.getElementById('lbl-price').value||0).toFixed(2);
+  const sku=document.getElementById('lbl-sku').value||'—';
+  const color=document.getElementById('lbl-color').value;
+  let imgHtml=labelImageData?`<img src="${labelImageData}" style="width:60px;height:60px;object-fit:cover;margin-bottom:5px">`:'';
+  document.getElementById('label-preview').innerHTML=`${imgHtml}<p class="prod-name">${name}</p><p class="prod-price" style="color:${color}">$${price}</p><p class="prod-sku">SKU: ${sku}</p>`;
+}
+function loadLabelImage(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{labelImageData=ev.target.result;updateLabel();};r.readAsDataURL(f);}
+function addLabelToQueue(){
+  const name=document.getElementById('lbl-name').value||'Producto';
+  const price=document.getElementById('lbl-price').value||'0';
+  labelQueue.push({name,price,sku:document.getElementById('lbl-sku').value,color:document.getElementById('lbl-color').value});
+  document.getElementById('queue-count').textContent=labelQueue.length;
+  const tag=document.createElement('span');tag.className='badge badge-info';tag.textContent=name;
+  document.getElementById('label-queue').appendChild(tag);
+}
+function printLabel(){
+  const preview=document.getElementById('label-preview').outerHTML;
+  const w=window.open('','_blank','width=400,height=300');
+  w.document.write(`<html><head><title>Etiqueta</title><style>body{font-family:Arial;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}.price-label{border:2px solid #222;padding:10px 18px;text-align:center}.prod-name{font-size:13px;font-weight:700;border-bottom:1px solid #222;padding-bottom:3px;margin-bottom:3px}.prod-price{font-size:26px;font-weight:900}.prod-sku{font-size:10px}</style></head><body>${preview}<script>window.print();window.close();<\/script></body></html>`);
+}
+function printAllLabels(){
+  if(!labelQueue.length){showToast('Cola vacía','danger');return;}
+  const html=labelQueue.map(l=>`<div style="border:2px solid #222;padding:10px 18px;text-align:center;display:inline-block;margin:8px"><p style="font-size:13px;font-weight:700;border-bottom:1px solid #222;padding-bottom:3px">${l.name}</p><p style="font-size:26px;font-weight:900;color:${l.color}">$${parseFloat(l.price).toFixed(2)}</p><p style="font-size:10px">SKU: ${l.sku}</p></div>`).join('');
+  const w=window.open('','_blank');
+  w.document.write(`<html><body style="display:flex;flex-wrap:wrap;padding:20px">${html}<script>window.print();window.close();<\/script></body></html>`);
+}
+
+// ===== BARCODE =====
+function generateBarcode(){
+  const val=document.getElementById('bc-value')?.value||'0000000000000';
+  const fmt=document.getElementById('bc-format')?.value||'CODE128';
+  const h=parseInt(document.getElementById('bc-height')?.value||80);
+  const desc=document.getElementById('bc-desc')?.value||'Producto';
+  try{JsBarcode('#barcode-svg',val,{format:fmt,height:h,fontSize:13,margin:8});}catch(e){console.warn(e);}
+  const dp=document.getElementById('bc-desc-preview');if(dp)dp.textContent=desc;
+}
+function addBarcodeToQueue(){
+  const val=document.getElementById('bc-value').value;
+  if(!val){showToast('Ingresa un valor','danger');return;}
+  const desc=document.getElementById('bc-desc').value||val;
+  bcQueue.push({val,desc,fmt:document.getElementById('bc-format').value,h:document.getElementById('bc-height').value,qty:document.getElementById('bc-qty').value});
+  document.getElementById('bc-queue-count').textContent=bcQueue.length;
+  const item=document.createElement('div');item.className='badge badge-info';item.style.marginBottom='3px';item.textContent=`${val} - ${desc}`;
+  document.getElementById('bc-queue').appendChild(item);
+}
+function printBarcode(){
+  const val=document.getElementById('bc-value').value||'0000000000000';
+  const fmt=document.getElementById('bc-format').value;
+  const h=document.getElementById('bc-height').value;
+  const desc=document.getElementById('bc-desc').value||'';
+  const qty=parseInt(document.getElementById('bc-qty').value)||1;
+  const items=Array(qty).fill(`<div style="display:inline-block;margin:10px;text-align:center;border:1px solid #ddd;padding:8px"><svg id="bc${Math.random().toString(36).slice(2)}"></svg><br><small>${desc}</small></div>`).join('');
+  const w=window.open('','_blank','width=600,height=400');
+  w.document.write(`<html><head><script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"><\/script></head><body style="padding:20px">${items}<script>document.querySelectorAll('svg').forEach(s=>JsBarcode(s,'${val}',{format:'${fmt}',height:${h}}));setTimeout(()=>{window.print();window.close();},500);<\/script></body></html>`);
+}
+function printAllBarcodes(){
+  if(!bcQueue.length){showToast('Cola vacía','danger');return;}
+  let svgs='';bcQueue.forEach((b,i)=>{const r=parseInt(b.qty)||1;for(let j=0;j<r;j++)svgs+=`<div style="display:inline-block;margin:8px;text-align:center;border:1px solid #ddd;padding:8px"><svg id="sv${i}_${j}"></svg><br><small>${b.desc}</small></div>`;});
+  let scripts=bcQueue.map((b,i)=>{const r=parseInt(b.qty)||1;return Array.from({length:r},(_,j)=>`JsBarcode('#sv${i}_${j}','${b.val}',{format:'${b.fmt}',height:${b.h}});`).join('');}).join('');
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"><\/script></head><body style="padding:20px">${svgs}<script>${scripts}setTimeout(()=>{window.print();window.close();},600);<\/script></body></html>`);
+}
+
+// ===== PRODUCTS =====
+function uploadImages(e){
+  const files=Array.from(e.target.files);
+  const row=document.getElementById('img-preview-row');
+  files.forEach(f=>{const r=new FileReader();r.onload=ev=>{const img=document.createElement('img');img.src=ev.target.result;img.className='product-thumb';row.appendChild(img);};r.readAsDataURL(f);});
+}
+function saveProduct(){
+  const code=document.getElementById('img-code').value||'PROD-NEW';
+  const name=document.getElementById('img-name').value||'Nuevo';
+  const price=document.getElementById('img-price').value||'0';
+  const thumbs=document.querySelectorAll('#img-preview-row .product-thumb');
+  const catalog=document.getElementById('product-catalog');
+  const imgSrc=thumbs.length?thumbs[0].src:null;
+  const card=document.createElement('div');
+  card.style.cssText='border:1px solid var(--border);border-radius:6px;overflow:hidden;background:#fff';
+  card.innerHTML=`<div style="background:var(--blue-light);height:110px;display:flex;align-items:center;justify-content:center;overflow:hidden">${imgSrc?`<img src="${imgSrc}" style="width:100%;height:110px;object-fit:cover">`:'<span style="font-size:32px">📦</span>'}</div><div style="padding:7px"><div style="font-weight:700;font-size:12px">${code}</div><div style="font-size:12px;color:#555">${name}</div><div style="font-size:13px;color:var(--blue);font-weight:700">$${parseFloat(price).toFixed(2)}</div></div>`;
+  catalog.appendChild(card);
+  document.getElementById('img-preview-row').innerHTML='';
+  showToast('Producto guardado');
+}
+
+// ===== QUERY =====
+const QUERY_DEMO={
+  BKPF:[{BUKRS:'1000',BELNR:'1800000001',GJAHR:'2024',BUDAT:'20240115',BLART:'RE',WAERS:'USD'},{BUKRS:'1000',BELNR:'1800000002',GJAHR:'2024',BUDAT:'20240116',BLART:'SA',WAERS:'USD'}],
+  MARA:[{MATNR:'MAT-001',MTART:'FERT',MATKL:'001',MEINS:'UN'},{MATNR:'MAT-002',MTART:'ROH',MATKL:'002',MEINS:'M'}],
+  VBAK:[{VBELN:'0000004421',AUDAT:'20240115',KUNNR:'CUST001',NETWR:'8400',WAERK:'USD'},{VBELN:'0000004422',AUDAT:'20240115',KUNNR:'CUST002',NETWR:'3200',WAERK:'USD'}],
+  KNA1:[{KUNNR:'CUST001',NAME1:'Distribuidora Sur',ORT01:'Santiago',LAND1:'DO'},{KUNNR:'CUST002',NAME1:'Retail Max',ORT01:'Santo Domingo',LAND1:'DO'}],
+  FACTURAS:facturas.map(f=>({ID:f.id,CLIENTE:f.client,FECHA:f.date,SUBTOTAL:f.subtotal,ITBIS:f.itbis,TOTAL:f.total,ESTADO:f.status})),
+  CAJA:facturas.map(f=>({FACTURA:f.id,METODO:f.payment,TOTAL:f.total,FECHA:f.date})),
+  INVENTARIO:INVENTORY.map(i=>({CODIGO:i.cod,NOMBRE:i.name,STOCK:i.qty,MINIMO:i.min,PRECIO:i.price,VENTAS_SEM:i.salesPerWeek})),
+};
+function addFieldRow(){const c=document.getElementById('fields-container');const d=document.createElement('div');d.className='condition-row';d.innerHTML=`<input class="form-control" placeholder="Campo" oninput="updateQuery()" style="flex:1"><button class="btn btn-xs btn-secondary" onclick="removeFieldRow(this)">✕</button>`;c.appendChild(d);}
+function removeFieldRow(btn){btn.parentElement.remove();updateQuery();}
+function addCondition(){const c=document.getElementById('conditions-container');const d=document.createElement('div');d.className='condition-row';d.innerHTML=`<input class="form-control" placeholder="Campo" oninput="updateQuery()" style="width:110px"><select class="form-control" onchange="updateQuery()" style="width:74px"><option>=</option><option>!=</option><option>&gt;</option><option>&lt;</option><option>LIKE</option><option>IN</option></select><input class="form-control" placeholder="Valor" oninput="updateQuery()" style="flex:1"><select class="form-control" onchange="updateQuery()" style="width:66px"><option>AND</option><option>OR</option></select><button class="btn btn-xs btn-danger" onclick="removeCondition(this)">✕</button>`;c.appendChild(d);}
+function removeCondition(btn){btn.parentElement.remove();updateQuery();}
+function updateQuery(){
+  const tbl=document.getElementById('q-table')?.value||'BKPF';
+  const fieldRows=document.querySelectorAll('#fields-container input');
+  const fields=Array.from(fieldRows).map(i=>i.value.trim()).filter(Boolean);
+  const sel=fields.length?fields.join(',\n  '):'*';
+  const condRows=document.querySelectorAll('#conditions-container .condition-row');
+  let wheres=[];
+  condRows.forEach((row,idx)=>{
+    const inputs=row.querySelectorAll('input');const selects=row.querySelectorAll('select');
+    const field=inputs[0]?.value.trim();const op=selects[0]?.value;const val=inputs[1]?.value.trim();const conj=selects[1]?.value||'AND';
+    if(field&&val)wheres.push(`${idx>0?conj+' ':''}${field} ${op} '${val}'`);
+  });
+  const whereClause=wheres.length?'\nWHERE '+wheres.join('\n  '):'';
+  const order=document.getElementById('q-order')?.value;
+  const limit=document.getElementById('q-limit')?.value||100;
+  const orderClause=order?`\nORDER BY ${order}`:'';
+  const qo=document.getElementById('query-output');
+  if(qo)qo.textContent=`SELECT ${sel}\nFROM ${tbl}${whereClause}${orderClause}\nUP TO ${limit} ROWS;`;
+}
+function copyQuery(){const text=document.getElementById('query-output').textContent;navigator.clipboard.writeText(text).then(()=>showToast('Copiado al portapapeles'));}
+function clearQuery(){document.querySelectorAll('#fields-container input').forEach(i=>i.value='');document.querySelectorAll('#conditions-container input').forEach(i=>i.value='');document.getElementById('q-order').value='';document.getElementById('q-limit').value='100';updateQuery();document.getElementById('query-results-panel').style.display='none';}
+function executeQuery(){
+  const query=document.getElementById('query-output').textContent;
+  const tbl=document.getElementById('q-table').value;
+  const hist=document.getElementById('query-history');
+  const entry=document.createElement('div');
+  entry.style.cssText='border-bottom:1px solid #ddd;padding:3px 0;cursor:pointer;color:var(--blue)';
+  entry.textContent=query.slice(0,80)+(query.length>80?'...':'');
+  entry.onclick=()=>document.getElementById('query-output').textContent=query;
+  hist.insertBefore(entry,hist.firstChild);
+  const rows=QUERY_DEMO[tbl]||[{INFO:'Sin datos demo para esta tabla'}];
+  const headers=Object.keys(rows[0]);
+  let html=`<p class="text-muted mb-2">Mostrando ${rows.length} registros</p><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${headers.map(h=>`<td>${r[h]||''}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  document.getElementById('query-results-table').innerHTML=html;
+  document.getElementById('query-result-count').textContent=`(${rows.length} filas)`;
+  document.getElementById('query-results-panel').style.display='block';
+}
+function exportQueryCSV(){
+  const tbl=document.getElementById('q-table').value;
+  const rows=QUERY_DEMO[tbl]||[{INFO:'Sin datos'}];
+  const headers=Object.keys(rows[0]);
+  const csv=[headers.join(','),...rows.map(r=>headers.map(h=>r[h]||'').join(','))].join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download=`query_${tbl}_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+  showToast('CSV exportado');
+}
+
+// ===== INIT ON LOAD =====
+window.onload=()=>{
+  // Pre-fill some catalog items
+  const cat=document.getElementById('product-catalog');
+  if(cat)cat.innerHTML=`
+    <div style="border:1px solid var(--border);border-radius:6px;overflow:hidden;background:#fff"><div style="background:var(--blue-light);height:110px;display:flex;align-items:center;justify-content:center;font-size:32px">🥫</div><div style="padding:7px"><div style="font-weight:700;font-size:12px">PROD-001</div><div style="font-size:12px;color:#555">Leche Entera 1L</div><div style="font-size:13px;color:var(--blue);font-weight:700">$85.00</div></div></div>
+    <div style="border:1px solid var(--border);border-radius:6px;overflow:hidden;background:#fff"><div style="background:var(--blue-light);height:110px;display:flex;align-items:center;justify-content:center;font-size:32px">🍞</div><div style="padding:7px"><div style="font-weight:700;font-size:12px">PROD-002</div><div style="font-size:12px;color:#555">Pan de Molde</div><div style="font-size:13px;color:var(--blue);font-weight:700">$55.00</div></div></div>
+    <div style="border:1px solid var(--border);border-radius:6px;overflow:hidden;background:#fff"><div style="background:var(--blue-light);height:110px;display:flex;align-items:center;justify-content:center;font-size:32px">🧴</div><div style="padding:7px"><div style="font-weight:700;font-size:12px">PROD-003</div><div style="font-size:12px;color:#555">Aceite Vegetal 1L</div><div style="font-size:13px;color:var(--blue);font-weight:700">$145.00</div></div></div>
+  `;
+  // Build POS after login
+};
+</script>
+</body>
+</html>
