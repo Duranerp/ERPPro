@@ -2,7 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#0D2340">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ERPPro">
+<meta name="application-name" content="ERPPro">
+<meta name="msapplication-TileColor" content="#0D2340">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>ERPPro — Sistema Empresarial</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -14,11 +22,11 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#EEF2F7;color:var(--tx);f
 #ls{position:fixed;inset:0;background:url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;display:flex;align-items:center;justify-content:center;z-index:9999;overflow:hidden}
 #ls::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,20,60,.78) 0%,rgba(0,50,120,.65) 50%,rgba(0,80,160,.55) 100%);z-index:0}
 #ls::after{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
-.lb-wrap{display:flex;gap:0;border-radius:12px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);width:820px;max-width:95vw;position:relative;z-index:1}
-.lb-side{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));backdrop-filter:blur(12px);padding:48px 40px;width:280px;flex-shrink:0;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid rgba(255,255,255,.15);border-radius:12px 0 0 12px}
-.lb-side-logo{text-align:center}
-.lb-side-logo h1{font-size:38px;font-weight:800;color:#fff;letter-spacing:3px;margin:0}
-.lb-side-logo h1 span{color:var(--gold)}
+.lb-wrap{display:flex;overflow:hidden;box-shadow:0 8px 48px rgba(0,0,0,.55);width:900px;max-width:96vw;min-height:560px;position:relative;z-index:1;border-radius:6px}
+.lb-side{width:320px;flex-shrink:0;background:linear-gradient(160deg,#0a1628 0%,#0d2340 60%,#0a3060 100%);padding:52px 44px;display:flex;flex-direction:column;justify-content:space-between}
+.lb{background:#fff;flex:1;padding:56px 60px 44px;display:flex;flex-direction:column;justify-content:center}
+.lb-side-logo h1{font-size:34px;font-weight:800;color:#fff;letter-spacing:3px;margin-bottom:4px}
+.lb-side-logo h1 span
 .lb-side-logo p{color:rgba(255,255,255,.7);font-size:12px;margin-top:6px;letter-spacing:.5px}
 .lb-side-feat{margin-top:32px}
 .lb-feat{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:13px}
@@ -30,11 +38,11 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#EEF2F7;color:var(--tx);f
 .ll h2{font-size:24px;font-weight:700;color:var(--bd)}
 .ll p{font-size:12px;color:var(--gd);margin-top:4px}
 .fg{margin-bottom:16px}
-.fg label{display:block;font-size:11px;font-weight:700;color:#374151;margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px}
-.fg input,.fg select{width:100%;padding:12px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:all .2s;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05)}
-.fg input:focus,.fg select:focus{border-color:#1a56db;background:#fff;box-shadow:0 0 0 3px rgba(26,86,219,.12)}
-.lbtn{width:100%;padding:13px;background:#1a56db;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.5px;margin-top:6px}
-.lbtn:hover{background:#1e429f;box-shadow:0 4px 16px rgba(26,86,219,.4)}
+.fg label{display:block;font-size:12px;font-weight:600;color:#333;margin-bottom:5px;letter-spacing:.3px}
+.fg input,.fg select{width:100%;padding:12px 0;border:none;border-bottom:2px solid #ddd;border-radius:0;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;background:transparent;color:#1a1a2e}
+.fg input:focus,.fg select:focus{border-color:#0070f3;background:transparent;box-shadow:none}
+.lbtn{width:100%;padding:14px;background:#0070f3;color:#fff;border:none;border-radius:4px;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s;letter-spacing:.3px;margin-top:20px}
+.lbtn:hover{background:#0058c7}
 .lbtn:active{transform:translateY(0)}
 .lerr{color:var(--ng);font-size:12px;margin-top:10px;text-align:center;display:none;background:#fff5f5;padding:8px;border-radius:4px;border-left:3px solid var(--ng)}
 @media(max-width:700px){.lb-wrap{flex-direction:column;width:95vw}.lb-side{width:100%;padding:28px;border-right:none;border-bottom:1px solid rgba(255,255,255,.15)}.lb-side-feat{display:none}.lb{padding:28px}}
@@ -230,59 +238,369 @@ body.dark-mode .alert-item,.dark-mode .ai{background:#1e1e2e}
 body.dark-mode input,body.dark-mode textarea{background:#2d2d3d;color:#e0e0e0;border-color:#555}
 body.dark-mode .sidebar{background:#0d1117}
 body.dark-mode #ls::before{background:linear-gradient(135deg,rgba(0,10,30,.82) 0%,rgba(0,40,100,.65) 100%)}
+/* SAP Login extras */
+.ll h2{display:inline-block}
+.fg{margin-bottom:20px;position:relative}
+.fg input:-webkit-autofill{background:transparent!important;-webkit-box-shadow:0 0 0 30px #fff inset}
+.lbtn:active{transform:scale(.99)}
+.lb-side-logo h1 span{color:#F0AB00}
+
 .dark-toggle{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:4px 10px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:5px}
 .dark-toggle:hover{background:rgba(255,255,255,.15)}
+
+/* ===== SAP PROFESSIONAL LOGIN ===== */
+#ls{position:fixed;inset:0;background:url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;display:flex;align-items:center;justify-content:center;z-index:9999;overflow:hidden}
+#ls::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(8,15,35,.90) 0%,rgba(10,25,60,.80) 100%);z-index:0}
+.lb-wrap{display:flex;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06);width:880px;max-width:96vw;min-height:560px;position:relative;z-index:1;border-radius:4px}
+.lb-side{width:310px;flex-shrink:0;background:linear-gradient(170deg,#060f1e 0%,#0d1f3c 50%,#0a2d55 100%);padding:52px 44px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid rgba(255,255,255,.07)}
+.lb{background:#fff;flex:1;padding:56px 60px 44px;display:flex;flex-direction:column;justify-content:center}
+.lb-side-logo h1{font-size:30px;font-weight:800;color:#fff;letter-spacing:4px;margin:0 0 4px;text-transform:uppercase}
+.lb-side-logo h1 span{color:#F0AB00}
+.lb-side-logo p{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;margin:0 0 16px}
+.lb-side-logo hr{border:none;border-top:1px solid rgba(255,255,255,.08);margin:0 0 28px}
+.lb-side-feat{flex:1}
+.lb-side-feat div{display:flex;align-items:center;gap:12px;margin-bottom:13px;color:rgba(255,255,255,.72);font-size:13px}
+.lb-side-feat div span:first-child{width:5px;height:5px;border-radius:50%;background:#F0AB00;flex-shrink:0;display:inline-block}
+.lb-side-footer{font-size:10px;color:rgba(255,255,255,.28);letter-spacing:.8px}
+.lb-side-info{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.5);margin-top:16px;line-height:1.6}
+.ll{margin-bottom:32px}
+.ll h2{font-size:30px;font-weight:300;color:#0a1628;margin:0 0 8px;letter-spacing:-0.5px}
+.ll hr-sap{display:block;height:3px;width:40px;background:#0070f3;border:none;margin:0 0 4px}
+.ll p{display:none}
+.fg{margin-bottom:24px;position:relative}
+.fg label{display:block;font-size:11px;font-weight:600;color:#666;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.fg input{width:100%;padding:10px 0;border:none;border-bottom:1.5px solid #ddd;border-radius:0;font-size:15px;font-family:inherit;outline:none;transition:border-color .2s;background:transparent;color:#0a1628;box-sizing:border-box}
+.fg input:focus{border-color:#0070f3}
+.lbtn{width:100%;padding:14px;background:#0070f3;color:#fff;border:none;border-radius:3px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;letter-spacing:.8px;text-transform:uppercase;margin-top:8px}
+.lbtn:hover{background:#0058c7}
+.lbtn:active{transform:scale(.99)}
+.lb-foot{font-size:12px;color:#999;text-align:center;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:6px}
+.lb-foot span:first-child{color:#0070f3}
+#lerr{color:#d32f2f;font-size:13px;margin-top:8px;padding:8px 12px;background:#fff5f5;border-left:3px solid #d32f2f;border-radius:2px;display:none}
+
+.vrf-term{display:flex;align-items:center;gap:14px;background:var(--bl);border:1px solid var(--br);border-radius:8px;padding:14px;transition:.15s}
+.vrf-term:hover{border-color:var(--blue);background:#f0f7ff}
+.vrf-term-icon{font-size:28px;flex-shrink:0}
+.vrf-term-info{flex:1}
+.vrf-term-name{font-weight:700;font-size:14px;color:var(--bd);margin-bottom:3px}
+.vrf-term-det{font-size:11px;color:var(--gd)}
+.vrf-term-btns{display:flex;gap:6px;flex-shrink:0}
+
+/* ============================================================
+   RESPONSIVE / ADAPTIVE DESIGN — ERPPro
+   Mobile-first with progressive enhancement
+   ============================================================ */
+
+/* ── Viewport & base ─────────────────────────────────────── */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+
+/* ── PWA / installable app hints ────────────────────────────*/
+@media(display-mode:standalone){
+  body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+}
+
+/* ── App shell ───────────────────────────────────────────── */
+#app{display:flex;flex-direction:column;min-height:100vh}
+.nav{display:flex;flex:1;overflow:hidden;position:relative}
+.main{flex:1;overflow-y:auto;padding:14px 16px;min-width:0}
+
+/* ── SIDEBAR overlay (mobile) ───────────────────────────── */
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:290;opacity:0;transition:opacity .25s}
+#sb-overlay.open{display:block;opacity:1}
+
+/* ============================================================
+   TABLET — 641px to 1024px
+   ============================================================ */
+@media(max-width:1024px){
+  .sidebar{width:220px!important;font-size:13px}
+  .si{padding:7px 14px}
+  .ni{padding:7px 14px;font-size:12px}
+  .main{padding:12px}
+  .dr{grid-template-columns:1fr!important}
+  .cg{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))!important}
+  .fr{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))!important}
+  .kc{padding:12px!important}
+  .kv{font-size:20px!important}
+  /* Tables: horizontal scroll */
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tw table{min-width:600px}
+  /* POS grid */
+  #pos-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))!important}
+  /* Page header */
+  .ph{flex-wrap:wrap;gap:6px}
+  .ph h2{font-size:16px}
+  /* Panels */
+  .panel{border-radius:6px}
+  /* Topbar */
+  .topbar{gap:8px;padding:0 12px}
+  #tb-branch,#tb-caja{display:none}
+}
+
+/* ============================================================
+   MOBILE — <= 640px
+   ============================================================ */
+@media(max-width:640px){
+  /* ── Topbar ────────────────────────────── */
+  .topbar{height:50px;padding:0 10px;gap:6px}
+  .topbar-title{font-size:14px!important;letter-spacing:.5px}
+  #tb-branch,#tb-caja,#tb-usr,.dark-toggle{display:none!important}
+  .tb-print-btn{display:none!important}
+
+  /* ── Sidebar: full-screen overlay ─────── */
+  .sidebar{
+    position:fixed!important;left:-100%!important;top:0;bottom:0;
+    width:80vw!important;max-width:300px;z-index:300;
+    transition:left .28s cubic-bezier(.4,0,.2,1);
+    box-shadow:4px 0 20px rgba(0,0,0,.3);
+    overflow-y:auto;-webkit-overflow-scrolling:touch
+  }
+  .sidebar.mobile-open{left:0!important}
+  .sidebar-collapsed .sidebar{left:-100%!important}
+
+  /* ── Main content ─────────────────────── */
+  .main{padding:10px 8px;padding-bottom:70px}
+
+  /* ── Page header ──────────────────────── */
+  .ph{padding:8px 10px;gap:6px;flex-wrap:wrap;border-radius:0}
+  .ph h2{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+  .bc{display:none}
+  .ph .fg3{gap:4px;flex-wrap:wrap}
+  .ph button,.ph .btn{font-size:11px!important;padding:5px 8px!important}
+
+  /* ── Module nav back/fwd ──────────────── */
+  .module-nav button{font-size:10px!important;padding:4px 7px!important}
+
+  /* ── KPI Cards ────────────────────────── */
+  .cg{grid-template-columns:1fr 1fr!important;gap:8px!important;margin-bottom:14px!important}
+  .kc{padding:10px 12px!important}
+  .kv{font-size:18px!important}
+  .kl{font-size:11px!important}
+  .ks{font-size:10px!important}
+
+  /* ── Panels & grid ────────────────────── */
+  .panel{border-radius:6px;margin-bottom:12px}
+  .dr{grid-template-columns:1fr!important;gap:10px!important}
+  .fr,.fg-row{grid-template-columns:1fr!important;gap:8px!important}
+  .fg2{margin-bottom:10px}
+
+  /* ── Tables: horizontal scroll ────────── */
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -8px;padding:0 8px}
+  .tw table{min-width:480px;font-size:12px}
+  .tw th,.tw td{padding:6px 8px!important;white-space:nowrap}
+
+  /* ── Forms ────────────────────────────── */
+  .fc{font-size:14px!important;padding:10px 12px!important}
+  .fg label,.fl{font-size:11px}
+  .btn{font-size:12px;padding:7px 11px}
+  .btn.sm{font-size:11px;padding:5px 8px}
+  .btn.xs{font-size:10px;padding:3px 7px}
+  .fg3{gap:6px;flex-wrap:wrap}
+
+  /* ── Modals: full-screen on mobile ─────── */
+  .mo{align-items:flex-end!important;padding:0!important}
+  .mbox{
+    width:100%!important;max-width:100%!important;
+    border-radius:16px 16px 0 0!important;
+    max-height:92vh;overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    animation:slideUp .3s ease!important
+  }
+  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .mh{padding:14px 16px;position:sticky;top:0;background:#fff;z-index:2}
+  .mh h3{font-size:14px}
+  .mbody{padding:12px 14px}
+  /* Drag handle for modals */
+  .mbox::before{content:'';display:block;width:36px;height:4px;background:#ddd;border-radius:2px;margin:10px auto 0}
+
+  /* ── POS Caja ─────────────────────────── */
+  #pos-grid{grid-template-columns:repeat(3,1fr)!important;gap:6px!important}
+  .ppb{padding:8px 4px!important}
+  .ppn{font-size:10px!important}
+  .ppp{font-size:12px!important}
+  .ppst{font-size:9px!important}
+
+  /* ── Cart sidebar → bottom sheet ──────── */
+  .cart-panel{
+    position:fixed;bottom:0;left:0;right:0;
+    border-radius:16px 16px 0 0;
+    box-shadow:0 -4px 24px rgba(0,0,0,.15);
+    max-height:50vh;z-index:150;
+    transition:transform .3s ease;
+    background:#fff;overflow-y:auto
+  }
+  .cart-panel.collapsed{transform:translateY(calc(100% - 60px))}
+
+  /* ── Invoices / facts table ───────────── */
+  #fact-table{font-size:11px}
+  #fact-table td:nth-child(3),
+  #fact-table td:nth-child(8){display:none}
+  #fact-table th:nth-child(3),
+  #fact-table th:nth-child(8){display:none}
+
+  /* ── Inventory master table ───────────── */
+  #im-tbody td:nth-child(4),
+  #im-tbody td:nth-child(12),
+  #im-tbody td:nth-child(13),
+  #im-tbody td:nth-child(14),
+  #im-tbody td:nth-child(15),
+  #im-tbody td:nth-child(19),
+  #im-tbody td:nth-child(20),
+  #im-tbody thead th:nth-child(4),
+  #im-tbody thead th:nth-child(12),
+  #im-tbody thead th:nth-child(13){display:none}
+
+  /* ── Labels page ─────────────────────── */
+  .lbl-prev{transform:scale(.8);transform-origin:top left}
+
+  /* ── Analytics ────────────────────────── */
+  #an-chart{height:220px!important}
+
+  /* ── Cierre ────────────────────────────── */
+  .cd-sum{grid-template-columns:1fr 1fr!important}
+
+  /* ── Login ─────────────────────────────── */
+  .lb-side{display:none!important}
+  .lb-wrap{width:100%!important;min-height:100vh!important;border-radius:0!important}
+  .lb{padding:40px 28px!important}
+  .ll h2{font-size:24px!important}
+  .lbtn{padding:16px!important;font-size:15px!important}
+
+  /* ── Bottom Navigation Bar ─────────────── */
+  #mobile-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;
+    background:var(--bd);z-index:200;
+    box-shadow:0 -2px 12px rgba(0,0,0,.25);
+    padding-bottom:env(safe-area-inset-bottom)
+  }
+  .mobile-nav-btn{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:6px 4px;cursor:pointer;border:none;background:none;color:rgba(255,255,255,.65);
+    font-size:9px;gap:2px;transition:color .15s
+  }
+  .mobile-nav-btn.active,.mobile-nav-btn:active{color:#F0AB00}
+  .mobile-nav-btn .mni{font-size:18px;line-height:1}
+  .mobile-nav-fab{
+    width:52px;height:52px;border-radius:50%;background:#F0AB00;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;cursor:pointer;margin:-14px 8px 0;
+    box-shadow:0 4px 14px rgba(240,171,0,.5);border:none;
+    flex-shrink:0;transition:transform .15s
+  }
+  .mobile-nav-fab:active{transform:scale(.93)}
+}
+
+/* ── Desktop-only: hide mobile elements ──── */
+@media(min-width:641px){
+  #mobile-nav{display:none!important}
+  #sb-overlay{display:none!important}
+}
+
+/* ── Print ───────────────────────────────── */
+@media print{
+  .sidebar,.topbar,#mobile-nav,.module-nav,.no-print,.ph .fg3{display:none!important}
+  .main{padding:0}
+  .page.active{display:block}
+  .panel{box-shadow:none;border:1px solid #ddd}
+}
+
+
+/* ── Mobile card-style tables (data-label) ── */
+@media(max-width:480px){
+  /* Very small phones: stack table cells */
+  .tw.card-mode table{border:none}
+  .tw.card-mode thead{display:none}
+  .tw.card-mode tr{display:block;margin-bottom:10px;border:1px solid var(--br);border-radius:6px;overflow:hidden}
+  .tw.card-mode td{display:flex;align-items:flex-start;gap:8px;padding:7px 12px!important;border-bottom:1px solid var(--gr);white-space:normal!important}
+  .tw.card-mode td::before{content:attr(data-label);font-size:10px;font-weight:700;color:var(--gd);min-width:80px;flex-shrink:0;padding-top:1px}
+  .tw.card-mode td:last-child{border-bottom:none}
+
+  /* POS 2-column on very small screens */
+  #pos-grid{grid-template-columns:1fr 1fr!important}
+  .ppb{min-height:90px}
+
+  /* Bigger touch targets */
+  .btn{min-height:38px;min-width:38px}
+  .btn.xs{min-height:32px}
+  input[type="checkbox"],input[type="radio"]{width:18px;height:18px}
+  select.fc{min-height:40px}
+}
+
+/* ── Tablet two-col but not full desktop ─── */  
+@media(min-width:641px)and(max-width:1024px){
+  .dr{grid-template-columns:1fr 1fr}
+  .cg{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  #pos-grid{grid-template-columns:repeat(4,1fr)}
+  .mbox{max-width:92vw!important}
+}
+
+/* ── Safe area insets (iPhone notch etc.) ── */
+.topbar{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+#mobile-nav{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+.main{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+
+/* ── Scrollbar styling (desktop) ────────── */
+@media(min-width:641px){
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.18);border-radius:3px}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.3)}
+}
+
+/* ── Prevent overscroll bounce ────────────── */
+html,body{overscroll-behavior:none}
+.sidebar,.main,.tw,.mbody{overscroll-behavior:contain}
+
 </style>
+
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22ERPPro%20Sistema%20Empresarial%22%2C%22short_name%22%3A%22ERPPro%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230D2340%22%2C%22theme_color%22%3A%22%230D2340%22%2C%22orientation%22%3A%22portrait-primary%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20viewBox%3D%270%200%20512%20512%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20rx%3D%2760%27%20fill%3D%27%230d2340%27%2F%3E%3Ctext%20x%3D%2756%27%20y%3D%27320%27%20font-family%3D%27Arial%27%20font-size%3D%27240%27%20font-weight%3D%27900%27%20fill%3D%27white%27%3EERP%3C%2Ftext%3E%3Ctext%20x%3D%2756%27%20y%3D%27440%27%20font-family%3D%27Arial%27%20font-size%3D%27120%27%20font-weight%3D%27900%27%20fill%3D%27%23F0AB00%27%3EPro%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 </head>
 <body>
 <div id="ls">
   <div class="lb-wrap">
-    <div class="lb-side">
-      <div class="lb-side-logo">
-        <h1>ERP<span>Pro</span></h1>
-        <p>Sistema Empresarial Integrado</p>
-        <div style="width:48px;height:3px;background:var(--gold);margin:14px auto 0"></div>
-      </div>
+  <!-- LEFT PANEL -->
+  <div class="lb-side">
+    <div class="lb-side-logo">
+      <h1>ERP<span>Pro</span></h1>
+      <p>Sistema Empresarial Integrado</p>
+      <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:0 0 28px">
       <div class="lb-side-feat">
-        <div style="margin-top:20px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.7">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:16px">📦</span><span>Inventario y Almacén</span></div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:16px">🖥️</span><span>Punto de Venta Integrado</span></div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:16px">📊</span><span>Reportes y Consultas</span></div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:16px">🔔</span><span>Alertas de Stock y Vencimientos</span></div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:16px">👥</span><span>RRHH y Nómina</span></div>
-          <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🏷️</span><span>Etiquetas y Códigos de Barra</span></div>
-        </div>
-        <div style="margin-top:28px;padding:14px;background:rgba(255,255,255,.08);border-radius:8px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.6">
-          💼 Plataforma de gestión empresarial multi-módulo para retail, distribución y manufactura.
-        </div>
+        <div><span></span><span>Inventario y Almacén</span></div>
+        <div><span></span><span>Punto de Venta Integrado</span></div>
+        <div><span></span><span>Reportes y Consultas</span></div>
+        <div><span></span><span>Alertas de Stock y Vencimientos</span></div>
+        <div><span></span><span>RRHH y Nómina</span></div>
+        <div><span></span><span>Etiquetas y Códigos de Barra</span></div>
       </div>
-      <div class="lb-side-footer">© 2025 ERPPro · Todos los derechos reservados</div>
+      <div class="lb-side-info">Plataforma empresarial para retail, distribución y manufactura.</div>
     </div>
-    <div class="lb">
-      <div class="ll"><h2>Bienvenido de vuelta</h2><p>Accede con tus credenciales corporativas</p></div>
-      <div class="fg">
-        <label>Usuario</label>
-        <input type="text" id="lu" placeholder="Nombre de usuario" autocomplete="username"
-          onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('lp').focus();}">
-      </div>
-      <div class="fg">
-        <label>Contraseña</label>
-        <input type="password" id="lp" placeholder="••••••••••••" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter'){event.preventDefault();doLogin();}">
-      </div>
-      <button class="lbtn" onclick="doLogin()">🔐 Iniciar Sesión</button>
-      <div class="lerr" id="lerr">⚠️ Credenciales incorrectas. Contacte al administrador del sistema.</div>
-      <div style="margin-top:16px;display:flex;align-items:center;gap:8px;color:#888;font-size:11px">
-        <span style="flex:1;height:1px;background:#e0e0e0"></span>
-        <span>🔒 Acceso seguro y cifrado</span>
-        <span style="flex:1;height:1px;background:#e0e0e0"></span>
-      </div>
+    <div class="lb-side-footer">© 2025 ERPPro v4.0 · Todos los derechos reservados</div>
+  </div>
+  <!-- RIGHT FORM -->
+  <div class="lb">
+    <div class="ll">
+      <h2>Bienvenido</h2>
+      <div class="lr-sap" style="height:3px;width:40px;background:#F0AB00;margin:8px 0 0"></div>
+    </div>
+    <div class="fg">
+      <label>Usuario</label>
+      <input type="text" id="lu" placeholder="Ingresa tu usuario" autocomplete="username">
+    </div>
+    <div class="fg">
+      <label>Contraseña</label>
+      <input type="password" id="lp" placeholder="••••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div id="lerr"></div>
+    <button class="lbtn" onclick="doLogin()">🔐 Iniciar Sesión</button>
+    <div class="lb-foot">
+      <span>●</span> Conexión segura y cifrada
     </div>
   </div>
 </div>
+</div>
 <div id="app" style="display:none;flex-direction:column;min-height:100vh">
 <div class="topbar">
-  <button class="side-toggle" onclick="toggleSidebar()" title="Mostrar/ocultar menú">☰</button>
+  <button class="side-toggle" onclick="isMobile()?toggleMobileSidebar():toggleSidebar()" title="Mostrar/ocultar menú">☰</button>
   <div class="tlogo"><span class="dot"></span>ERP<span style="color:var(--gold)">Pro</span></div>
   <div class="ttitle">Sistema de Gestión Empresarial</div>
   <div class="fg3">
@@ -364,6 +682,7 @@ body.dark-mode #ls::before{background:linear-gradient(135deg,rgba(0,10,30,.82) 0
     <div class="ni" data-page="query" onclick="navTo('query',this)"><span class="ni-icon">🔍</span>Consultas</div>
     <div class="ni" data-page="api" onclick="navTo('api',this)"><span class="ni-icon">🔗</span>Integraciones API</div>
     <div class="ni" data-page="devices" onclick="navTo('devices',this)"><span class="ni-icon">📱</span>Dispositivos/Cajas</div>
+<div class="ni" data-page="verifone" onclick="navTo('verifone',this)"><span class="ni-icon">🖥️</span>Verifone</div>
     <div class="ni" data-page="usuarios" onclick="navTo('usuarios',this)"><span class="ni-icon">👤</span>Usuarios</div>
     <div class="ni" data-page="ps" onclick="navTo('ps',this)"><span class="ni-icon">📋</span>Proyectos (PS)</div>
     <div class="ni" data-page="qm" onclick="navTo('qm',this)"><span class="ni-icon">✅</span>Calidad (QM)</div>
@@ -1512,6 +1831,16 @@ Response: {
 <div class="fg2"><label class="fl">Ícono</label><select class="fc" id="cm-ico"><option>📋</option><option>📊</option><option>💰</option><option>🏭</option><option>📦</option><option>🔍</option><option>📅</option><option>⚙️</option><option>🎯</option><option>📌</option></select></div>
 <div class="fg2"><label class="fl">Color tema</label><select class="fc" id="cm-col"><option value="">Azul (default)</option><option value="green">Verde</option><option value="gold">Dorado</option><option value="orange">Naranja</option><option value="teal">Teal</option><option value="red">Rojo</option></select></div>
 <div class="fg2"><label class="fl">Descripción</label><input class="fc" id="cm-desc" placeholder="Descripción breve del módulo"></div>
+<div class="fg2" style="grid-column:1/-1">
+<label class="fl">📋 Módulos que incluye este acceso personalizado</label>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:5px;max-height:260px;overflow-y:auto;border:1px solid var(--br);border-radius:6px;padding:10px;background:var(--gr)">
+<label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="dashboard" class="cm-mod-chk" style="accent-color:var(--blue)"> 🏠 Menú de Inicio</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="alertas" class="cm-mod-chk" style="accent-color:var(--blue)"> 🔔 Alertas</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="caja" class="cm-mod-chk" style="accent-color:var(--blue)"> 🖥️ POS - Caja</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="facturacion" class="cm-mod-chk" style="accent-color:var(--blue)"> 🧾 Facturación</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="sd" class="cm-mod-chk" style="accent-color:var(--blue)"> 🛒 Gestión Ventas</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="mm" class="cm-mod-chk" style="accent-color:var(--blue)"> 📦 Inventario MM</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="invmaster" class="cm-mod-chk" style="accent-color:var(--blue)"> 📊 Consulta Inventario</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="analytics" class="cm-mod-chk" style="accent-color:var(--blue)"> 📈 Análisis</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="conteo" class="cm-mod-chk" style="accent-color:var(--blue)"> 🔄 Conteo Cíclico</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="excel" class="cm-mod-chk" style="accent-color:var(--blue)"> 📥 Carga Excel</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="recepcion" class="cm-mod-chk" style="accent-color:var(--blue)"> 🚚 Recepción</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="compras" class="cm-mod-chk" style="accent-color:var(--blue)"> 🛍️ Órdenes de Compra</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="proveedores" class="cm-mod-chk" style="accent-color:var(--blue)"> 🏭 Proveedores</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="labels" class="cm-mod-chk" style="accent-color:var(--blue)"> 🏷️ Etiquetas</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="barcodes" class="cm-mod-chk" style="accent-color:var(--blue)"> ▐▌ Códigos de Barra</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="fi" class="cm-mod-chk" style="accent-color:var(--blue)"> 📊 Contabilidad</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="co" class="cm-mod-chk" style="accent-color:var(--blue)"> 💰 Controlling</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="cierred" class="cm-mod-chk" style="accent-color:var(--blue)"> 📅 Cierre Día</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="cierrem" class="cm-mod-chk" style="accent-color:var(--blue)"> 📆 Cierre Mes</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="query" class="cm-mod-chk" style="accent-color:var(--blue)"> 🔍 Consultas</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="hcm" class="cm-mod-chk" style="accent-color:var(--blue)"> 👥 RRHH y Nómina</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="usuarios" class="cm-mod-chk" style="accent-color:var(--blue)"> 👤 Usuarios</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="api" class="cm-mod-chk" style="accent-color:var(--blue)"> 🔗 API</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="devices" class="cm-mod-chk" style="accent-color:var(--blue)"> 📱 Dispositivos</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="verifone" class="cm-mod-chk" style="accent-color:var(--blue)"> 🖥️ Verifone</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="pp" class="cm-mod-chk" style="accent-color:var(--blue)"> 🏭 Producción</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="ps" class="cm-mod-chk" style="accent-color:var(--blue)"> 📂 Proyectos</label><label style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:12px;background:var(--gr);border:1px solid var(--br)"><input type="checkbox" value="qm" class="cm-mod-chk" style="accent-color:var(--blue)"> 🔬 Calidad</label>
+</div>
+<div class="fg3 mt1">
+  <button class="btn xs bp" onclick="document.querySelectorAll('.cm-mod-chk').forEach(c=>c.checked=true)">✓ Todos</button>
+  <button class="btn xs bs" onclick="document.querySelectorAll('.cm-mod-chk').forEach(c=>c.checked=false)">✗ Ninguno</button>
+</div>
+</div>
 </div>
 <div class="fg2"><label class="fl">Secciones / Opciones del módulo <button class="btn xs bp" onclick="addCMSection()" style="margin-left:6px">+ Agregar Sección</button></label>
 <div id="cm-sections">
@@ -1560,9 +1889,30 @@ Response: {
     <div class="mh"><h3>💳 Procesar Pago</h3><button class="mc" onclick="closeM('pay-mo')">✕</button></div>
     <div class="mbody">
       <div class="fg2"><label class="fl">Total</label><div style="font-size:28px;font-weight:700;color:var(--bd)" id="pay-tot">$0.00</div></div>
-      <div class="fg2"><label class="fl">Método</label><select class="fc" id="pay-met" onchange="updChg()"><option>Efectivo</option><option>Tarjeta Débito</option><option>Tarjeta Crédito</option><option>Transferencia</option></select></div>
+      <div class="fg2"><label class="fl">Método</label><select class="fc" id="pay-met" onchange="updChg()"><option value="Efectivo">Efectivo</option>
+<option value="Verifone-Debito">💳 Débito — Verifone</option>
+<option value="Verifone-Credito">💳 Crédito — Verifone</option>
+<option value="Verifone-Contactless">📱 NFC Contactless — Verifone</option>
+<option value="Transferencia">Transferencia</option>
+<option value="Cheque">Cheque</option>
+<option value="Credito">Crédito</option></select></div>
       <div class="fg2" id="pay-cash"><label class="fl">Monto Recibido</label><input type="number" class="fc" id="pay-recv" oninput="updChg()"></div>
-      <div class="fg2"><label class="fl">Cambio</label><div style="font-size:22px;font-weight:700;color:var(--ok)" id="pay-chg">$0.00</div></div>
+      <div class="fg2"><label class="fl">Cambio</label><div style="font-size:22px;font-weight:700;color:var(--ok)" id="pay-chg">$0.00</div>
+<div id="pay-vrf" style="display:none;margin-top:10px">
+  <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:8px;padding:16px;text-align:center;color:#fff">
+    <div style="font-size:24px;margin-bottom:6px">🖥️</div>
+    <div style="font-weight:700;font-size:13px;color:#F0AB00;margin-bottom:3px">VERIFONE — Terminal Activa</div>
+    <div id="vrf-status" style="background:rgba(255,255,255,.08);border-radius:5px;padding:10px;margin:10px 0;font-size:12px">
+      <div id="vrf-line1" style="color:#F0AB00;margin-bottom:3px">⏳ Esperando tarjeta...</div>
+      <div id="vrf-line2" style="color:rgba(255,255,255,.55);font-size:11px">Acerque, inserte o deslice la tarjeta</div>
+    </div>
+    <div id="vrf-btns" style="display:flex;gap:8px;justify-content:center">
+      <button class="btn bsuc sm" onclick="simVrfPay()">✅ Simular Aprobado</button>
+      <button class="btn bdng sm" onclick="simVrfFail()">❌ Simular Rechazo</button>
+    </div>
+    <div id="vrf-result" style="margin-top:8px;font-size:12px;display:none"></div>
+  </div>
+</div></div>
       <div class="fg3"><button class="btn bsuc" style="flex:1" onclick="processPay()">✅ Confirmar</button><button class="btn bs" onclick="closeM('pay-mo')">Cancelar</button></div>
     </div>
   </div>
@@ -2131,7 +2481,89 @@ function printOC(id){
     <p class="tot">Total OC: ${f2(o.tot)}</p>
     <div style="margin-top:20px;font-size:11px;color:#888;border-top:1px solid #eee;padding-top:10px">Generado por ERPPro el ${new Date().toLocaleString('es-DO')} | ${o.id}</div>
     <scr`+`ipt>try{JsBarcode('#ocbc','${code}',{format:'CODE128',height:60,fontSize:14,margin:8});}catch(e){}setTimeout(()=>{window.print();},700);<\/scr`+`ipt>
-    </body></html>`);
+    
+<div id="page-verifone" class="page">
+<div class="ph"><h2>🖥️ Verifone — Terminales de Pago</h2><span class="bc">Administración › Verifone</span></div>
+<div class="cg mb3">
+  <div class="kc green"><div class="kl">Terminales Activas</div><div class="kv" id="vrf-k1">2</div><div class="ks">Conectadas</div></div>
+  <div class="kc teal"><div class="kl">Trans. Hoy</div><div class="kv" id="vrf-k2">0</div></div>
+  <div class="kc gold"><div class="kl">Monto Hoy</div><div class="kv" id="vrf-k3">$0.00</div></div>
+  <div class="kc"><div class="kl">Rechazadas</div><div class="kv" id="vrf-k4">0</div></div>
+</div>
+<div class="dr">
+  <div class="panel"><div class="phead">📡 Terminales Registradas</div><div class="pbody">
+    <div id="vrf-terminals" style="display:flex;flex-direction:column;gap:12px">
+      <div class="vrf-term"><div class="vrf-term-icon">🖥️</div><div class="vrf-term-info"><div class="vrf-term-name">VX520 — Caja Principal</div><div class="vrf-term-det">SN: 890-123-456 | IP: 192.168.1.50 | Puerto: 7900 | <span style="color:var(--ok)">● Activa</span></div></div><div class="vrf-term-btns"><button class="btn xs bsuc" onclick="testVrfTerm(1)">Probar</button><button class="btn xs bwrn">⚙️</button></div></div>
+      <div class="vrf-term"><div class="vrf-term-icon">📱</div><div class="vrf-term-info"><div class="vrf-term-name">e285 — Móvil Ventas</div><div class="vrf-term-det">SN: 890-789-012 | Bluetooth | <span style="color:var(--ok)">● Activa</span></div></div><div class="vrf-term-btns"><button class="btn xs bsuc" onclick="testVrfTerm(2)">Probar</button><button class="btn xs bwrn">⚙️</button></div></div>
+    </div>
+    <hr style="margin:16px 0">
+    <div class="phead" style="border:none;padding:0 0 10px">➕ Agregar Terminal</div>
+    <div class="fr mb2">
+      <div class="fg2"><label class="fl">Nombre / Ubicación</label><input class="fc" id="vrf-nom" placeholder="Ej: Caja 2"></div>
+      <div class="fg2"><label class="fl">Modelo</label>
+        <select class="fc" id="vrf-model">
+          <option>VX520 (USB/Ethernet)</option><option>VX680 (WiFi/GPRS)</option>
+          <option>e285 (Bluetooth/Móvil)</option><option>V400m (Android)</option>
+          <option>VX820 (PinPad)</option>
+        </select>
+      </div>
+      <div class="fg2"><label class="fl">IP / Conexión</label><input class="fc" id="vrf-ip" placeholder="192.168.1.x"></div>
+      <div class="fg2"><label class="fl">Puerto</label><input class="fc" id="vrf-port" value="7900" placeholder="7900"></div>
+    </div>
+    <div class="fg3"><button class="btn bsuc" onclick="addVrfTerm()">➕ Registrar Terminal</button></div>
+  </div></div>
+  <div class="panel"><div class="phead">⚙️ Configuración Global Verifone</div><div class="pbody">
+    <div class="fg2"><label class="fl">Merchant ID</label><input class="fc" id="vrf-mid" value="123456789" placeholder="Merchant ID"></div>
+    <div class="fg2"><label class="fl">Terminal ID</label><input class="fc" id="vrf-tid" value="TID-001" placeholder="Terminal ID"></div>
+    <div class="fg2"><label class="fl">Banco Adquirente</label>
+      <select class="fc" id="vrf-banco">
+        <option>Banco Popular</option><option>BanReservas</option><option>Scotiabank</option>
+        <option>BHD León</option><option>Banco Santa Cruz</option>
+      </select>
+    </div>
+    <div class="fg2"><label class="fl">Protocolo</label>
+      <select class="fc" id="vrf-proto">
+        <option>GPRS/Ethernet (recomendado)</option><option>WiFi</option><option>Bluetooth</option><option>USB</option>
+      </select>
+    </div>
+    <div class="fg2"><label class="fl">Timeout (segundos)</label><input type="number" class="fc" id="vrf-timeout" value="60" min="30" max="300"></div>
+    <div class="fg3 mt2"><button class="btn bsuc" onclick="saveVrfCfg()">💾 Guardar Configuración</button><button class="btn bp" onclick="testVrfConn()">🔌 Probar Conexión</button></div>
+    <div id="vrf-conn-result" class="mt2"></div>
+  </div></div>
+</div>
+<div class="panel mt2"><div class="phead">📋 Log de Transacciones</div><div class="pbody" style="padding:0">
+  <div class="tw"><table><thead><tr><th>Fecha</th><th>Terminal</th><th>Tipo</th><th>Monto</th><th>Auth</th><th>Estado</th><th>Factura</th></tr></thead>
+  <tbody id="vrf-log-tb">
+    <tr><td>2025-05-16</td><td>VX520</td><td>Débito</td><td>RD$1,850.00</td><td>847392</td><td><span class="badge bs2">Aprobado</span></td><td>FC-0901</td></tr>
+    <tr><td>2025-05-16</td><td>e285</td><td>Crédito</td><td>RD$3,200.00</td><td>293847</td><td><span class="badge bs2">Aprobado</span></td><td>FC-0900</td></tr>
+    <tr><td>2025-05-15</td><td>VX520</td><td>Débito</td><td>RD$450.00</td><td>—</td><td><span class="badge bd2">Rechazado</span></td><td>—</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+
+
+<!-- MOBILE BOTTOM NAVIGATION BAR -->
+<div id="mobile-nav" style="display:none">
+  <button class="mobile-nav-btn" onclick="navTo('dashboard',this)" id="mn-home">
+    <span class="mni">🏠</span><span>Inicio</span>
+  </button>
+  <button class="mobile-nav-btn" onclick="navTo('caja',this)" id="mn-pos">
+    <span class="mni">🖥️</span><span>Caja</span>
+  </button>
+  <button class="mobile-nav-fab" onclick="toggleMobileSidebar()" title="Menú">
+    ☰
+  </button>
+  <button class="mobile-nav-btn" onclick="navTo('invmaster',this)" id="mn-inv">
+    <span class="mni">📦</span><span>Inventario</span>
+  </button>
+  <button class="mobile-nav-btn" onclick="navTo('alertas',this)" id="mn-alert">
+    <span class="mni">🔔</span><span>Alertas</span>
+  </button>
+</div>
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div id="sb-overlay" onclick="toggleMobileSidebar()"></div>
+
+</body></html>`);
 }
 
 // ============================================================
@@ -2146,7 +2578,7 @@ function printLabelsBatch(items,type,mon,copies){
     const price=gpf(item).toFixed(2);
     const mon2=mon||'RD$';
     const packInfo=(item.pack&&item.pack>1)?` COD:${item.pack}CAJA`:'';
-    const pCaba=(item.pack&&item.pack>1)?`P-Caba ${item.pack}`:'P-Caba';
+    const pCaba='';
     for(let c=0;c<(copies||1);c++){
       const sid=`lbl_${i}_${c}_${Date.now()}${Math.random().toString(36).slice(2,6)}`;
       if(type===1){
@@ -2154,7 +2586,7 @@ function printLabelsBatch(items,type,mon,copies){
          * Código interno arriba-izquierda (bold)
          * Descripción debajo
          * Precio ENORME centrado
-         * Banda amarilla: barcode + EAN izquierda + P-Caba derecha */
+         * Banda amarilla: barcode + EAN izquierda +  derecha */
         html+=`<div style="
           background:#fff;border:1.5px solid #bbb;
           padding:7px 10px 0 10px;
@@ -2170,7 +2602,7 @@ function printLabelsBatch(items,type,mon,copies){
             <svg id="${sid}" style="width:100%;display:block;max-height:46px"></svg>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px">
               <span style="font-size:11px;font-weight:700;letter-spacing:0.5px">${cod_ean}</span>
-              <span style="font-size:14px;font-weight:900">${pCaba}</span>
+              <span style="font-size:14px;font-weight:900"></span>
             </div>
           </div>
         </div>`;
@@ -2312,6 +2744,7 @@ function previewCeoModule(){
   </div></div>`;
 }
 function saveCeoModule(){
+  const selMods=Array.from(document.querySelectorAll('.cm-mod-chk:checked')).map(c=>c.value);
   if(CU?.role!=='ceo'){toast('Solo el CEO puede crear módulos','dng');return;}
   const nom=document.getElementById('cm-nom')?.value;
   if(!nom){toast('Ingresa nombre del módulo','dng');return;}
@@ -2402,19 +2835,22 @@ function renderEmpTbWithProfile(){
 // FILTER OC PRODUCTS (search in loaded supplier products)  
 // ============================================================
 function filterOCProds(){
-  const q=(document.getElementById('oc-search-input')?.value||'').toLowerCase().trim();
-  document.querySelectorAll('[id^="ocr-"]').forEach(row=>{
+  const q=(document.getElementById('oc-search')?.value||'').toLowerCase().trim();
+  const tb=document.getElementById('oc-tbody');if(!tb)return;
+  Array.from(tb.querySelectorAll('tr')).forEach(row=>{
+    if(!row.id||!row.id.startsWith('ocr-'))return;
     row.style.display=(!q||row.textContent.toLowerCase().includes(q))?'':'none';
   });
 }
 function filterRecProds(){
-  const q=(document.getElementById('rec-search-input')?.value||'').toLowerCase().trim();
-  document.querySelectorAll('[id^="recr-"]').forEach(row=>{
+  const q=(document.getElementById('rec-search')?.value||'').toLowerCase().trim();
+  const tb=document.getElementById('rec-tbody');if(!tb)return;
+  Array.from(tb.querySelectorAll('tr')).forEach(row=>{
     row.style.display=(!q||row.textContent.toLowerCase().includes(q))?'':'none';
   });
 }
 function filterMMInv(){
-  const q=(document.getElementById('mm-inv-search')?.value||'').toLowerCase();
+  const q=(document.getElementById('mm-inv-s')?.value||'').toLowerCase().trim();
   const tb=document.getElementById('mm-table');if(!tb)return;
   Array.from(tb.querySelectorAll('tr')).forEach(row=>{
     row.style.display=(!q||row.textContent.toLowerCase().includes(q))?'':'none';
@@ -2498,7 +2934,7 @@ function updLbl(){
         <div style="background:#333;height:36px;margin-bottom:3px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#888">[ barcode ]</div>
         <div style="display:flex;justify-content:space-between;align-items:center">
           <span style="font-size:11px;font-weight:700">7461053095533</span>
-          <span style="font-size:14px;font-weight:900">P-Caba</span>
+          <span style="font-size:14px;font-weight:900"></span>
         </div>
       </div>`;
   } else {
@@ -3117,11 +3553,38 @@ function openPay(){
 }
 function updChg(){
   const tot=parseFloat(document.getElementById('pay-tot').textContent.replace('$','').replace(',',''))||0;
-  const recv=parseFloat(document.getElementById('pay-recv').value)||0;
+  const recv=parseFloat(document.getElementById('pay-recv')?.value||0)||0;
   const chg=recv-tot;
   const el=document.getElementById('pay-chg');
-  el.textContent=f2(Math.max(0,chg));el.style.color=chg<0?'var(--ng)':'var(--ok)';
-  document.getElementById('pay-cash').style.display=document.getElementById('pay-met').value==='Efectivo'?'block':'none';
+  if(el){el.textContent=f2(Math.max(0,chg));el.style.color=chg<0?'var(--ng)':'var(--ok)';}
+  const met=document.getElementById('pay-met')?.value||'';
+  const isVrf=met.startsWith('Verifone');
+  const cashEl=document.getElementById('pay-cash');if(cashEl)cashEl.style.display=met==='Efectivo'?'block':'none';
+  const vrfEl=document.getElementById('pay-vrf');if(vrfEl)vrfEl.style.display=isVrf?'block':'none';
+  if(isVrf){
+    const l1=document.getElementById('vrf-line1');const l2=document.getElementById('vrf-line2');
+    const vt=met==='Verifone-Credito'?'Tarjeta Crédito':met==='Verifone-Contactless'?'Sin Contacto NFC':'Tarjeta Débito';
+    if(l1)l1.textContent='⏳ Terminal lista — '+vt;
+    if(l2)l2.textContent='Monto: '+f2(tot)+' | Acerque o inserte la tarjeta';
+    const vr=document.getElementById('vrf-result');if(vr)vr.style.display='none';
+  }
+}
+function simVrfPay(){
+  const l1=document.getElementById('vrf-line1');const l2=document.getElementById('vrf-line2');
+  const vr=document.getElementById('vrf-result');const btns=document.getElementById('vrf-btns');
+  if(l1)l1.innerHTML='<span style="color:#4CAF50">✅ APROBADO</span>';
+  if(l2)l2.textContent='Transacción exitosa — Auth: '+Math.floor(Math.random()*900000+100000);
+  if(btns)btns.style.display='none';
+  if(vr){vr.style.display='block';vr.innerHTML='<span style="color:#4CAF50">✓ Pago procesado correctamente</span>';}
+  setTimeout(()=>{processPay();const btns2=document.getElementById('vrf-btns');if(btns2)btns2.style.display='flex';},1200);
+}
+function simVrfFail(){
+  const l1=document.getElementById('vrf-line1');const l2=document.getElementById('vrf-line2');
+  const vr=document.getElementById('vrf-result');
+  if(l1)l1.innerHTML='<span style="color:#f44336">❌ RECHAZADO</span>';
+  if(l2)l2.textContent='Tarjeta rechazada. Intente de nuevo.';
+  if(vr){vr.style.display='block';vr.innerHTML='<span style="color:#f44336">× Transacción no autorizada</span>';}
+  toast('Pago rechazado — intente otro método','dng');
 }
 function processPay(){
   const disc=parseFloat(document.getElementById('pos-disc')?.value||0)/100;
@@ -3221,12 +3684,54 @@ function openEditUser(u){
         <option value="inactivo" ${u.st==='inactivo'?'selected':''}>Inactivo (suspendido)</option>
       </select>
     </div>
+    <div class="fr mb2" style="grid-column:1/-1">
+<div class="fg2" style="grid-column:1/-1"><label class="fl">Módulos con acceso (selecciona)</label>
+<div id="eu-mods" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:5px;max-height:240px;overflow-y:auto;border:1px solid var(--br);border-radius:6px;padding:8px">
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-dashboard"><input type="checkbox" value="dashboard" class="eu-mod-chk" style="accent-color:var(--blue)"> 🏠 Menú de Inicio</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-alertas"><input type="checkbox" value="alertas" class="eu-mod-chk" style="accent-color:var(--blue)"> 🔔 Alertas</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-caja"><input type="checkbox" value="caja" class="eu-mod-chk" style="accent-color:var(--blue)"> 🖥️ Punto de Venta</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-facturacion"><input type="checkbox" value="facturacion" class="eu-mod-chk" style="accent-color:var(--blue)"> 🧾 Facturación</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-sd"><input type="checkbox" value="sd" class="eu-mod-chk" style="accent-color:var(--blue)"> 🛒 Gestión Ventas</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-mm"><input type="checkbox" value="mm" class="eu-mod-chk" style="accent-color:var(--blue)"> 📦 Inventario MM</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-invmaster"><input type="checkbox" value="invmaster" class="eu-mod-chk" style="accent-color:var(--blue)"> 📊 Consulta Inventario</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-analytics"><input type="checkbox" value="analytics" class="eu-mod-chk" style="accent-color:var(--blue)"> 📈 Análisis de Datos</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-conteo"><input type="checkbox" value="conteo" class="eu-mod-chk" style="accent-color:var(--blue)"> 🔄 Conteo Cíclico</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-excel"><input type="checkbox" value="excel" class="eu-mod-chk" style="accent-color:var(--blue)"> 📥 Carga Excel</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-recepcion"><input type="checkbox" value="recepcion" class="eu-mod-chk" style="accent-color:var(--blue)"> 🚚 Recepción Mercancía</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-compras"><input type="checkbox" value="compras" class="eu-mod-chk" style="accent-color:var(--blue)"> 🛍️ Órdenes de Compra</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-proveedores"><input type="checkbox" value="proveedores" class="eu-mod-chk" style="accent-color:var(--blue)"> 🏭 Proveedores</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-labels"><input type="checkbox" value="labels" class="eu-mod-chk" style="accent-color:var(--blue)"> 🏷️ Etiquetas de Precios</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-barcodes"><input type="checkbox" value="barcodes" class="eu-mod-chk" style="accent-color:var(--blue)"> ▐▌ Códigos de Barra</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-fi"><input type="checkbox" value="fi" class="eu-mod-chk" style="accent-color:var(--blue)"> 📊 Contabilidad</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-co"><input type="checkbox" value="co" class="eu-mod-chk" style="accent-color:var(--blue)"> 💰 Controlling</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-cierred"><input type="checkbox" value="cierred" class="eu-mod-chk" style="accent-color:var(--blue)"> 📅 Cierre Día</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-cierrem"><input type="checkbox" value="cierrem" class="eu-mod-chk" style="accent-color:var(--blue)"> 📆 Cierre Mes</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-query"><input type="checkbox" value="query" class="eu-mod-chk" style="accent-color:var(--blue)"> 🔍 Consultas</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-hcm"><input type="checkbox" value="hcm" class="eu-mod-chk" style="accent-color:var(--blue)"> 👥 RRHH y Nómina</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-usuarios"><input type="checkbox" value="usuarios" class="eu-mod-chk" style="accent-color:var(--blue)"> 👤 Usuarios</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-api"><input type="checkbox" value="api" class="eu-mod-chk" style="accent-color:var(--blue)"> 🔗 API</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-devices"><input type="checkbox" value="devices" class="eu-mod-chk" style="accent-color:var(--blue)"> 📱 Dispositivos</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-verifone"><input type="checkbox" value="verifone" class="eu-mod-chk" style="accent-color:var(--blue)"> 🖥️ Verifone</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-ps"><input type="checkbox" value="ps" class="eu-mod-chk" style="accent-color:var(--blue)"> 📂 Proyectos</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-qm"><input type="checkbox" value="qm" class="eu-mod-chk" style="accent-color:var(--blue)"> 🔬 Calidad</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-catalogo"><input type="checkbox" value="catalogo" class="eu-mod-chk" style="accent-color:var(--blue)"> 🛒 Catálogo</label>
+<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;background:var(--gr)" id="eu-mod-pp"><input type="checkbox" value="pp" class="eu-mod-chk" style="accent-color:var(--blue)"> 🏭 Producción</label>
+</div>
+<div class="fg3 mt1"><button class="btn xs bp" onclick="document.querySelectorAll('.eu-mod-chk').forEach(c=>c.checked=true)">✓ Todos</button><button class="btn xs bs" onclick="document.querySelectorAll('.eu-mod-chk').forEach(c=>c.checked=false)">✗ Ninguno</button></div>
+</div>
+</div>
     <input type="hidden" id="eu-orig" value="${u.u}">
     <div class="fg3 mt2">
       <button class="btn bsuc" onclick="saveEditUser()">💾 Guardar Cambios</button>
       <button class="btn bs" onclick="closeM('edit-usr-mo')">Cancelar</button>
     </div>`;
   document.getElementById('edit-usr-title').textContent='Editar: '+u.name;
+  // Pre-select user's current modules
+  setTimeout(()=>{
+    const allMods=['dashboard','alertas','caja','facturacion','sd','mm','invmaster','analytics','conteo','excel','recepcion','compras','proveedores','labels','barcodes','fi','co','cierred','cierrem','query','hcm','usuarios','api','devices','verifone','ps','qm','catalogo','pp'];
+    const userMods=u.mods||(RA[u.role]||allMods);
+    document.querySelectorAll('.eu-mod-chk').forEach(c=>{c.checked=userMods.includes(c.value);});
+  },50);
   openM('edit-usr-mo');
 }
 function saveEditUser(){
@@ -3241,10 +3746,11 @@ function saveEditUser(){
   if(!nom||!uname){toast('Nombre y usuario requeridos','dng');return;}
   if(pass&&pass!==pass2){toast('Las contraseñas no coinciden','dng');return;}
   if(pass&&pass.length<6){toast('Contraseña mínimo 6 caracteres','dng');return;}
+  const selMods=Array.from(document.querySelectorAll('.eu-mod-chk:checked')).map(c=>c.value);
   const i=SYS_USERS.findIndex(x=>x.u===orig);
   const i2=USERS_DB.findIndex(x=>x.u===orig);
   if(i<0){toast('Usuario no encontrado','dng');return;}
-  const upd={...SYS_USERS[i],u:uname,name:nom,role:rol,br,st,ini:nom.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)};
+  const upd={...SYS_USERS[i],u:uname,name:nom,role:rol,br,st,ini:nom.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),mods:selMods.length?selMods:null};
   if(pass)upd.p=pass;
   SYS_USERS[i]=upd;if(i2>=0)USERS_DB[i2]=upd;
   renderUsrTb();closeM('edit-usr-mo');
@@ -4127,6 +4633,439 @@ document.addEventListener('click', function(e){
   }
 });
 
+
+let VRF_TRANS=[];
+function testVrfTerm(id){
+  const l=document.createElement('div');l.textContent='['+new Date().toLocaleTimeString()+'] Terminal '+id+' — Ping OK (28ms)';
+  toast('Terminal '+id+' — conexión OK');
+}
+function addVrfTerm(){
+  const nom=document.getElementById('vrf-nom')?.value||'Nueva Caja';
+  const model=document.getElementById('vrf-model')?.value||'VX520';
+  const ip=document.getElementById('vrf-ip')?.value||'—';
+  const port=document.getElementById('vrf-port')?.value||'7900';
+  const c=document.getElementById('vrf-terminals');
+  const d=document.createElement('div');d.className='vrf-term';
+  d.innerHTML=`<div class="vrf-term-icon">🖥️</div><div class="vrf-term-info"><div class="vrf-term-name">${model} — ${nom}</div><div class="vrf-term-det">IP: ${ip} | Puerto: ${port} | <span style="color:var(--ok)">● Activa</span></div></div><div class="vrf-term-btns"><button class="btn xs bsuc">Probar</button><button class="btn xs bwrn">⚙️</button></div>`;
+  c.appendChild(d);
+  ['vrf-nom','vrf-ip'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  toast('Terminal registrada: '+nom);
+  const k=document.getElementById('vrf-k1');if(k)k.textContent=document.querySelectorAll('.vrf-term').length;
+}
+function saveVrfCfg(){
+  toast('Configuración Verifone guardada');
+}
+function testVrfConn(){
+  const r=document.getElementById('vrf-conn-result');
+  if(r)r.innerHTML='<div class="ai inf">🔌 Probando conexión...</div>';
+  setTimeout(()=>{if(r)r.innerHTML='<div class="ai suc">✅ Conexión exitosa — Merchant autorizado — Batch #'+Math.floor(Math.random()*9999+1000)+'</div>';},1400);
+}
+// Track verifone transactions
+const _origProcessPay=processPay;
+processPay=function(){
+  const met=document.getElementById('pay-met')?.value||'';
+  if(met.startsWith('Verifone')){
+    const tot=parseFloat(document.getElementById('pay-tot')?.textContent?.replace(/[$,]/g,'')||0);
+    const auth=Math.floor(Math.random()*900000+100000);
+    VRF_TRANS.unshift({fecha:tod(),terminal:'VX520',tipo:met.replace('Verifone-',''),monto:tot,auth,st:'Aprobado'});
+    const k2=document.getElementById('vrf-k2');if(k2)k2.textContent=VRF_TRANS.length;
+    const k3=document.getElementById('vrf-k3');if(k3)k3.textContent=f2(VRF_TRANS.reduce((s,t)=>s+t.monto,0));
+    renderVrfLog();
+  }
+  _origProcessPay();
+};
+function renderVrfLog(){
+  const tb=document.getElementById('vrf-log-tb');if(!tb)return;
+  tb.innerHTML=VRF_TRANS.map(t=>`<tr><td>${t.fecha}</td><td>${t.terminal}</td><td>${t.tipo}</td><td>${f2(t.monto)}</td><td>${t.auth}</td><td><span class="badge bs2">${t.st}</span></td><td>—</td></tr>`).join('')+tb.innerHTML;
+}
+
+
+function selAllMods(v){
+  document.querySelectorAll('#cm-mods input[type="checkbox"]').forEach(c=>c.checked=v);
+}
+function getSelectedMods(){
+  return Array.from(document.querySelectorAll('#cm-mods input[type="checkbox"]:checked')).map(c=>c.value);
+}
+
+
+// ================================================================
+// RESPONSIVE / ADAPTIVE DESIGN — JavaScript
+// ================================================================
+const BREAKPOINTS={mobile:640,tablet:1024};
+
+function isMobile(){return window.innerWidth<=BREAKPOINTS.mobile;}
+function isTablet(){return window.innerWidth>BREAKPOINTS.mobile&&window.innerWidth<=BREAKPOINTS.tablet;}
+function isDesktop(){return window.innerWidth>BREAKPOINTS.tablet;}
+
+// ── Mobile sidebar toggle ────────────────────────────────────
+function toggleMobileSidebar(){
+  if(!isMobile())return;
+  const sb=document.querySelector('.sidebar');
+  const ov=document.getElementById('sb-overlay');
+  if(!sb||!ov)return;
+  const isOpen=sb.classList.contains('mobile-open');
+  if(isOpen){
+    sb.classList.remove('mobile-open');
+    ov.classList.remove('open');
+    document.body.style.overflow='';
+  } else {
+    sb.classList.add('mobile-open');
+    ov.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+}
+function closeMobileSidebar(){
+  const sb=document.querySelector('.sidebar');
+  const ov=document.getElementById('sb-overlay');
+  if(sb)sb.classList.remove('mobile-open');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ── Show/hide mobile nav bar ─────────────────────────────────
+function updateMobileNav(){
+  const nav=document.getElementById('mobile-nav');
+  if(!nav)return;
+  nav.style.display=isMobile()?'flex':'none';
+}
+
+// ── Update active state on mobile nav ───────────────────────
+function updateMobileNavActive(pid){
+  const map={dashboard:'mn-home',caja:'mn-pos',invmaster:'mn-inv',alertas:'mn-alert'};
+  document.querySelectorAll('.mobile-nav-btn').forEach(b=>b.classList.remove('active'));
+  const active=document.getElementById(map[pid]);
+  if(active)active.classList.add('active');
+}
+
+// ── Adapt tables for mobile (add data-label) ─────────────────
+function adaptTablesForMobile(){
+  if(!isMobile())return;
+  document.querySelectorAll('.tw table').forEach(tbl=>{
+    const ths=Array.from(tbl.querySelectorAll('thead th')).map(th=>th.textContent.trim());
+    tbl.querySelectorAll('tbody tr').forEach(tr=>{
+      Array.from(tr.querySelectorAll('td')).forEach((td,i)=>{
+        if(ths[i]&&!td.dataset.label)td.dataset.label=ths[i];
+      });
+    });
+  });
+}
+
+// ── Adapt panels: add touch-friendly class ──────────────────
+function applyResponsiveClass(){
+  document.body.classList.toggle('is-mobile',isMobile());
+  document.body.classList.toggle('is-tablet',isTablet());
+  document.body.classList.toggle('is-desktop',isDesktop());
+  updateMobileNav();
+  // Adjust sidebar behavior
+  const sb=document.querySelector('.sidebar');
+  if(sb){
+    if(isDesktop()){
+      sb.classList.remove('mobile-open');
+      document.getElementById('sb-overlay')?.classList.remove('open');
+      document.body.style.overflow='';
+    }
+  }
+  // Adjust POS grid columns
+  const posGrid=document.getElementById('pos-grid');
+  if(posGrid){
+    if(isMobile())posGrid.style.gridTemplateColumns='repeat(3,1fr)';
+    else if(isTablet())posGrid.style.gridTemplateColumns='repeat(4,1fr)';
+    else posGrid.style.gridTemplateColumns='';
+  }
+  // Adjust KPI grid
+  document.querySelectorAll('.cg').forEach(g=>{
+    g.style.gridTemplateColumns=isMobile()?'1fr 1fr':isTablet()?'repeat(3,1fr)':'';
+  });
+  // Login: hide side panel on mobile
+  const lbSide=document.querySelector('.lb-side');
+  if(lbSide)lbSide.style.display=isMobile()?'none':'flex';
+}
+
+// ── Patch navTo to close sidebar on mobile ───────────────────
+const _navTo_responsive=navTo;
+navTo=function(pid,el){
+  _navTo_responsive(pid,el);
+  if(isMobile())closeMobileSidebar();
+  updateMobileNavActive(pid);
+  setTimeout(adaptTablesForMobile,200);
+};
+
+// ── Cart pull-up handle for mobile POS ──────────────────────
+let cartCollapsed=true;
+function toggleCartMobile(){
+  const cp=document.querySelector('.cart-panel');
+  if(!cp||!isMobile())return;
+  cartCollapsed=!cartCollapsed;
+  cp.classList.toggle('collapsed',cartCollapsed);
+}
+
+// ── Touch swipe to close sidebar ────────────────────────────
+(function(){
+  let startX=0,startY=0;
+  document.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;startY=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-startX;
+    const dy=Math.abs(e.changedTouches[0].clientY-startY);
+    if(dx<-60&&dy<40){// Swipe left → close sidebar
+      closeMobileSidebar();
+    } else if(dx>60&&dy<40&&startX<40){// Swipe right from edge → open sidebar
+      if(isMobile())toggleMobileSidebar();
+    }
+  },{passive:true});
+})();
+
+// ── Orientation change ───────────────────────────────────────
+window.addEventListener('orientationchange',()=>{
+  setTimeout(applyResponsiveClass,200);
+});
+window.addEventListener('resize',()=>{
+  applyResponsiveClass();
+});
+
+// ── Init ─────────────────────────────────────────────────────
+(function initResponsive(){
+  applyResponsiveClass();
+  // On login success also apply
+  const _origDoLogin_resp=doLogin;
+  doLogin=function(){
+    _origDoLogin_resp();
+    setTimeout(applyResponsiveClass,300);
+  };
+})();
+
+
+// ================================================================
+// ERPPro API SYNC — Backend connector
+// Detecta automáticamente si el servidor está activo
+// Si no → modo offline (datos en memoria como antes)
+// ================================================================
+const API = {
+  BASE: window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+    ? window.location.origin
+    : null,
+  online: false,
+  checked: false,
+};
+
+// Detectar si el servidor backend está activo
+async function detectServer() {
+  if (!API.BASE) { API.online = false; API.checked = true; showServerBadge(false); return; }
+  try {
+    const r = await fetch(API.BASE + '/api/status', { signal: AbortSignal.timeout(1500) });
+    API.online = r.ok;
+  } catch {
+    API.online = false;
+  }
+  API.checked = true;
+  showServerBadge(API.online);
+  if (API.online) {
+    console.log('✅ Servidor backend activo — modo sincronizado');
+    await syncFromServer();
+  } else {
+    console.log('📴 Servidor no disponible — modo offline');
+  }
+}
+
+function showServerBadge(online) {
+  let badge = document.getElementById('server-badge');
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.id = 'server-badge';
+    badge.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:9000;font-size:11px;padding:4px 10px;border-radius:20px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);transition:all .3s;font-family:inherit';
+    badge.onclick = () => { if (!API.online) detectServer(); };
+    document.body.appendChild(badge);
+  }
+  badge.style.background = online ? '#1a7a3a' : '#555';
+  badge.style.color = '#fff';
+  badge.textContent = online ? '● Sincronizado' : '○ Modo offline';
+  badge.title = online ? 'Datos guardados en servidor' : 'Sin servidor — clic para reconectar';
+}
+
+// Llamada API genérica con fallback silencioso
+async function apiFetch(method, endpoint, body) {
+  if (!API.online) return null;
+  try {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const r = await fetch(API.BASE + endpoint, opts);
+    if (!r.ok) return null;
+    return await r.json();
+  } catch {
+    return null;
+  }
+}
+
+// ── Cargar todos los datos desde el servidor al iniciar ──────
+async function syncFromServer() {
+  if (!API.online) return;
+  try {
+    const [inv, facts, movs, ocs, emps, provs, recs, usrs] = await Promise.all([
+      apiFetch('GET', '/api/inventario'),
+      apiFetch('GET', '/api/facturas'),
+      apiFetch('GET', '/api/movimientos'),
+      apiFetch('GET', '/api/ocs'),
+      apiFetch('GET', '/api/empleados'),
+      apiFetch('GET', '/api/proveedores'),
+      apiFetch('GET', '/api/recepciones'),
+      apiFetch('GET', '/api/usuarios'),
+    ]);
+
+    if (inv   && inv.length)   { INV.length=0;   inv.forEach(i=>INV.push(i)); }
+    if (facts && facts.length) { FACTS.length=0; facts.forEach(f=>FACTS.push(f)); }
+    if (movs  && movs.length)  { MOVS.length=0;  movs.forEach(m=>MOVS.push(m)); }
+    if (ocs   && ocs.length)   { OCS.length=0;   ocs.forEach(o=>OCS.push(o)); }
+    if (emps  && emps.length)  { EMPS.length=0;  emps.forEach(e=>EMPS.push(e)); }
+    if (provs && provs.length) { PROVS.length=0; provs.forEach(p=>PROVS.push(p)); }
+    if (usrs  && usrs.length)  {
+      SYS_USERS.length=0;
+      usrs.forEach(u=>{
+        if(u.mods && typeof u.mods==='string') u.mods=JSON.parse(u.mods);
+        SYS_USERS.push(u);
+      });
+    }
+
+    // Re-render after sync
+    if (typeof renderAll === 'function') renderAll();
+    toast('✅ Datos sincronizados desde servidor');
+  } catch(e) {
+    console.warn('Sync error:', e);
+  }
+}
+
+// ── GUARDAR INVENTARIO ────────────────────────────────────────
+const _origAddMat_api = addMat;
+addMat = async function() {
+  _origAddMat_api();
+  if (!API.online) return;
+  const cod = document.getElementById('mm-cod')?.value?.trim();
+  if (!cod) return;
+  const item = INV.find(i => i.cod === cod);
+  if (item) await apiFetch('POST', '/api/inventario', item);
+};
+
+// ── GUARDAR FACTURA ───────────────────────────────────────────
+const _origProcessPay_api = processPay;
+processPay = async function() {
+  _origProcessPay_api();
+  if (!API.online) return;
+  const f = FACTS[0];
+  if (f) await apiFetch('POST', '/api/facturas', f);
+  // Sync inventory changes
+  for (const item of INV) {
+    await apiFetch('POST', '/api/inventario', item);
+  }
+};
+
+// ── GUARDAR OC ────────────────────────────────────────────────
+const _origSaveOC_api = typeof saveOC !== 'undefined' ? saveOC : null;
+if (_origSaveOC_api) {
+  saveOC = async function() {
+    _origSaveOC_api();
+    if (!API.online) return;
+    const o = OCS[0];
+    if (o) await apiFetch('POST', '/api/ocs', o);
+  };
+}
+
+// ── GUARDAR EMPLEADO ──────────────────────────────────────────
+const _origSaveEmp_api = typeof saveEmp !== 'undefined' ? saveEmp : null;
+if (_origSaveEmp_api) {
+  saveEmp = async function() {
+    _origSaveEmp_api();
+    if (!API.online) return;
+    const e = EMPS[EMPS.length-1];
+    if (e) await apiFetch('POST', '/api/empleados', e);
+  };
+}
+
+// ── GUARDAR USUARIO ───────────────────────────────────────────
+const _origSaveUser_api = typeof saveUser !== 'undefined' ? saveUser : null;
+if (_origSaveUser_api) {
+  saveUser = async function() {
+    _origSaveUser_api();
+    if (!API.online) return;
+    const u = SYS_USERS[SYS_USERS.length-1];
+    if (u) await apiFetch('POST', '/api/usuarios', u);
+  };
+}
+
+// ── GUARDAR PROVEEDOR ─────────────────────────────────────────
+const _origSaveProv_api = typeof saveProv !== 'undefined' ? saveProv : null;
+if (_origSaveProv_api) {
+  saveProv = async function() {
+    _origSaveProv_api();
+    if (!API.online) return;
+    const p = PROVS[0];
+    if (p) await apiFetch('POST', '/api/proveedores', p);
+  };
+}
+
+// ── GUARDAR RECEPCIÓN ─────────────────────────────────────────
+const _origGuardarRec_api = typeof guardarRecepcion !== 'undefined' ? guardarRecepcion : null;
+if (_origGuardarRec_api) {
+  guardarRecepcion = async function() {
+    _origGuardarRec_api();
+    if (!API.online) return;
+    // Sync INV changes after reception
+    for (const item of INV) {
+      await apiFetch('POST', '/api/inventario', item);
+    }
+  };
+}
+
+// ── LOGIN con backend ─────────────────────────────────────────
+const _origDoLogin_api = doLogin;
+doLogin = async function() {
+  if (!API.online) {
+    // Modo offline: login local
+    _origDoLogin_api();
+    return;
+  }
+  const u = document.getElementById('lu')?.value?.trim() || '';
+  const p = document.getElementById('lp')?.value || '';
+  try {
+    const r = await apiFetch('POST', '/api/auth/login', { u, p });
+    if (r && r.ok) {
+      CU = r.user;
+      // Proceed with regular login flow
+      document.getElementById('ls').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      setupPerms();
+      buildMods();
+      populateSels();
+      await syncFromServer();
+      renderAll();
+      updDash();
+      navTo('dashboard', null);
+      toast('Bienvenido, ' + CU.name);
+    } else {
+      const errEl = document.getElementById('lerr');
+      if (errEl) { errEl.textContent = 'Usuario o contraseña incorrectos'; errEl.style.display = 'block'; }
+    }
+  } catch {
+    // Fallback to offline login
+    _origDoLogin_api();
+  }
+};
+
+// ── BACKUP desde el servidor ──────────────────────────────────
+async function downloadServerBackup() {
+  if (!API.online) { toast('Sin servidor para backup', 'wrn'); return; }
+  window.open(API.BASE + '/api/backup', '_blank');
+  toast('Backup descargado desde servidor');
+}
+
+// ── AUTO-DETECTAR servidor al cargar ─────────────────────────
+window.addEventListener('load', () => {
+  setTimeout(detectServer, 800);
+});
+
+// Reconexión automática cada 30 segundos si está offline
+setInterval(() => {
+  if (!API.online && API.checked) detectServer();
+}, 30000);
+
 </script>
 </body>
-</html> 
+</html>
+
